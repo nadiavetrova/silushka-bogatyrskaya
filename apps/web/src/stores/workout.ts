@@ -7,7 +7,7 @@ import type {
   SetData,
   Difficulty,
   AdaptationSuggestion,
-} from "@windgym/shared";
+} from "../lib/types";
 import { api } from "@/lib/api";
 
 interface WorkoutState {

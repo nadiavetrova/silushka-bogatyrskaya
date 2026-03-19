@@ -1,7 +1,7 @@
 "use client";
 
 import { create } from "zustand";
-import type { UserData } from "@windgym/shared";
+import type { UserData } from "../lib/types";
 import { api } from "@/lib/api";
 
 interface AuthState {

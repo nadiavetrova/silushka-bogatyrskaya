@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import type { ExerciseData, SetData, Difficulty } from "@windgym/shared";
+import type { ExerciseData, SetData, Difficulty } from "../lib/types";
 import { SetInput } from "./SetInput";
 import { DifficultySelector } from "./DifficultySelector";
 

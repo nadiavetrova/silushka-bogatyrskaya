@@ -1,7 +1,5 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  transpilePackages: ["@windgym/shared"],
-};
+const nextConfig: NextConfig = {};
 
 export default nextConfig;

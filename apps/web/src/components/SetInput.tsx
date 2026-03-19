@@ -1,6 +1,6 @@
 "use client";
 
-import type { SetData } from "@windgym/shared";
+import type { SetData } from "../lib/types";
 
 interface Props {
   set: SetData;

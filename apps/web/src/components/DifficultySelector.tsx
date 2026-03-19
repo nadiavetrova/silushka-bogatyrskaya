@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import type { Difficulty } from "@windgym/shared";
+import type { Difficulty } from "../lib/types";
 
 const options: { value: Difficulty; label: string; color: string; bg: string }[] = [
   { value: "easy", label: "Легко", color: "text-[#5ea352]", bg: "bg-[#3a6b32]" },

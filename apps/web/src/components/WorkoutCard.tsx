@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import type { WorkoutData } from "@windgym/shared";
+import type { WorkoutData } from "../lib/types";
 import { api } from "@/lib/api";
 
 const difficultyLabels: Record<string, string> = {

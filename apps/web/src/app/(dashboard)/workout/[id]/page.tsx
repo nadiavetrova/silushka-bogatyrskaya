@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import type { WorkoutData } from "@windgym/shared";
+import type { WorkoutData } from "../../../../lib/types";
 import { api } from "@/lib/api";
 
 const difficultyLabels: Record<string, string> = {
