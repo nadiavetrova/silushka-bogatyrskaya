@@ -53,8 +53,8 @@ export default function LoginPage() {
         </div>
 
         <div className="card-wood rounded-xl p-6 border-2 border-[#7a5c35]/50">
-          <h2 className="font-display text-lg font-semibold text-center text-[#a83232] mb-4">
-            Вход в Семью
+          <h2 className="font-display text-xl font-bold text-center text-[#e8dcc8] mb-4 tracking-wide">
+            Кузня Тела
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
