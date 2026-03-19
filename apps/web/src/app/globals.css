@@ -1,0 +1,202 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'Slovic';
+  src: url('/fonts/Slovic_Demo-Historic.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Slovic Serif';
+  src: url('/fonts/Slovic_Demo-Serif.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Slovic Sans';
+  src: url('/fonts/Slovic_Demo-SansSerif.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Slovic Slab';
+  src: url('/fonts/Slovic_Demo-SlabSerif.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Slovic Semi';
+  src: url('/fonts/Slovic_Demo-SemiSerif.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme inline {
+  --color-wood-900: #1a1208;
+  --color-wood-800: #2a1f0f;
+  --color-wood-700: #3d2e18;
+  --color-wood-600: #5a4428;
+  --color-wood-500: #7a5c35;
+  --color-wood-400: #9b7a4a;
+  --color-wood-300: #b89a6a;
+  --color-wood-200: #d4bc8e;
+  --color-wood-100: #e8dcc8;
+  --color-wood-50: #f5f0e6;
+  --color-gold-500: #8b2525;
+  --color-gold-400: #a83232;
+  --color-gold-300: #7a3030;
+  --color-gold-200: #9a5050;
+  --color-forest-600: #3a6b32;
+  --color-forest-400: #5ea352;
+  --color-berry-700: #6b1a1a;
+  --color-berry-600: #8b2525;
+  --color-berry-500: #a83232;
+  --color-berry-400: #c54545;
+  --font-sans: 'Slovic Serif', 'Slovic', Georgia, serif;
+  --font-display: 'Slovic', Georgia, serif;
+}
+
+body {
+  background-color: #111210;
+  background-image: url('/images/ornament-bg.png');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  color: #f5eed8;
+  font-family: 'Slovic Serif', 'Slovic', Georgia, serif;
+}
+
+/* Diamond ornament pattern background */
+.slavic-ornament {
+  background-color: #1a1208;
+  background-image:
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5L55 30L30 55L5 30Z' fill='none' stroke='%238b2525' stroke-width='0.4' opacity='0.08'/%3E%3Cpath d='M30 15L45 30L30 45L15 30Z' fill='none' stroke='%238b2525' stroke-width='0.3' opacity='0.06'/%3E%3Ccircle cx='30' cy='30' r='2' fill='%238b2525' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+/* Wood texture card with real image */
+.card-wood {
+  background-color: #1a1b1e;
+  background-image:
+    linear-gradient(135deg, rgba(22, 24, 28, 0.5) 0%, rgba(26, 28, 32, 0.45) 100%),
+    url('/images/tree.png');
+  background-size: cover;
+  border: 1px solid #3a3530;
+  box-shadow: inset 0 1px 0 rgba(139, 37, 37, 0.08), 0 2px 8px rgba(0,0,0,0.3);
+}
+
+/* Parchment texture */
+.card-parchment {
+  background-color: #f5eed8;
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(224, 212, 184, 0.5) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(210, 195, 160, 0.4) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(200, 180, 140, 0.3) 0%, transparent 70%),
+    linear-gradient(180deg, #f5eed8 0%, #e8dcc0 50%, #e0d4b8 100%);
+  color: #2a1f0f;
+  border: 2px solid #8b252540;
+}
+
+/* Green ornamental divider */
+.slavic-divider {
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    #8b252533 20%,
+    #8b2525 50%,
+    #8b252533 80%,
+    transparent 100%
+  );
+}
+
+.font-display {
+  font-family: 'Slovic', Georgia, serif;
+}
+
+/* Login background with forest overlay */
+.forest-bg {
+  background-color: #111210;
+  background-image:
+    radial-gradient(ellipse at 50% 0%, rgba(20, 20, 18, 0.6) 0%, transparent 70%),
+    radial-gradient(ellipse at 20% 80%, rgba(15, 15, 13, 0.8) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 60%, rgba(20, 20, 18, 0.4) 0%, transparent 50%),
+    linear-gradient(180deg, #111210 0%, #1a1208 40%, #1a1208 100%);
+}
+
+/* Shield shaped element */
+.shield-shape {
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+/* Neomorphism button — raised */
+.btn-neo {
+  background: linear-gradient(145deg, #1e1f22, #161718);
+  box-shadow:
+    4px 4px 10px rgba(0, 0, 0, 0.5),
+    -2px -2px 8px rgba(60, 55, 48, 0.15);
+  border: 1px solid rgba(60, 55, 48, 0.2);
+  transition: all 0.2s ease;
+}
+.btn-neo:hover {
+  box-shadow:
+    5px 5px 14px rgba(0, 0, 0, 0.6),
+    -3px -3px 10px rgba(60, 55, 48, 0.2);
+}
+.btn-neo:active, .btn-neo.btn-neo-pressed {
+  box-shadow:
+    inset 3px 3px 8px rgba(0, 0, 0, 0.5),
+    inset -2px -2px 6px rgba(60, 55, 48, 0.1);
+}
+
+/* Neomorphism button — burgundy accent */
+.btn-neo-accent {
+  background: linear-gradient(145deg, #4a1818, #3a1212);
+  box-shadow:
+    4px 4px 10px rgba(0, 0, 0, 0.5),
+    -2px -2px 8px rgba(139, 37, 37, 0.12);
+  border: 1px solid rgba(139, 37, 37, 0.3);
+  transition: all 0.2s ease;
+}
+.btn-neo-accent:hover {
+  box-shadow:
+    5px 5px 14px rgba(0, 0, 0, 0.6),
+    -3px -3px 10px rgba(139, 37, 37, 0.2);
+  background: linear-gradient(145deg, #551c1c, #421515);
+}
+.btn-neo-accent:active {
+  box-shadow:
+    inset 3px 3px 8px rgba(0, 0, 0, 0.5),
+    inset -2px -2px 6px rgba(139, 37, 37, 0.08);
+}
+
+/* Neomorphism small button (Л/С/Т) */
+.btn-neo-sm {
+  background: linear-gradient(145deg, #1e1f22, #161718);
+  box-shadow:
+    2px 2px 6px rgba(0, 0, 0, 0.4),
+    -1px -1px 4px rgba(60, 55, 48, 0.1);
+  border: 1px solid rgba(60, 55, 48, 0.15);
+  transition: all 0.15s ease;
+}
+.btn-neo-sm:active, .btn-neo-sm.btn-neo-pressed {
+  box-shadow:
+    inset 2px 2px 5px rgba(0, 0, 0, 0.4),
+    inset -1px -1px 3px rgba(60, 55, 48, 0.08);
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #1a1208; }
+::-webkit-scrollbar-thumb { background: #5a4428; border-radius: 3px; }
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.7) sepia(1) hue-rotate(10deg);
+}
