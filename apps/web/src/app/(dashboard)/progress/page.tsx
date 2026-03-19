@@ -24,7 +24,7 @@ export default function ProgressPage() {
       const dateStr = new Date(workout.date).toLocaleDateString("ru-RU", { month: "short", day: "numeric" });
       for (const exercise of workout.exercises) {
         if (!exerciseMap.has(exercise.name)) exerciseMap.set(exercise.name, []);
-        const maxWeight = Math.max(...exercise.sets.map((s) => s.weight), 0);
+        const maxWeight = Math.max(...exercise.sets.map((s: { weight: number }) => s.weight), 0);
         exerciseMap.get(exercise.name)!.push({ date: dateStr, weight: maxWeight });
       }
     }
