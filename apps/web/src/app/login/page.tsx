@@ -47,7 +47,7 @@ export default function LoginPage() {
           <h1 className="font-display text-4xl font-bold text-[#d4bc8e] tracking-wide drop-shadow-lg">
             Силушка
           </h1>
-          <p className="text-[#d4bc8e] mt-1 text-base italic drop-shadow">
+          <p className="font-display text-[#d4bc8e] mt-1 text-2xl font-bold tracking-widest drop-shadow">
             Богатырская
           </p>
         </div>
@@ -86,9 +86,9 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-gradient-to-r from-[#5a4428] to-[#7a5c35] hover:from-[#7a5c35] hover:to-[#9b7a4a] disabled:opacity-50 rounded-xl text-[#a83232] font-display font-semibold text-lg border-2 border-[#8b2525]/40 transition-all"
+              className="w-full py-3 bg-[#d4bc8e] hover:bg-[#c4a87a] disabled:opacity-50 rounded-xl text-[#4a1010] font-display font-bold text-lg border-2 border-[#b89a6a] transition-all"
             >
-              {loading ? "Ожидание..." : "Войти в Сению"}
+              {loading ? "Ожидание..." : "Войти в Семью"}
             </button>
           </form>
 

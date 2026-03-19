@@ -63,7 +63,7 @@ export default function RegisterPage() {
             <input type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} placeholder="Повтори тайное слово" required minLength={6}
               className="w-full px-4 py-3 bg-[#151412] border-2 border-[#7a5c35]/50 rounded-xl text-[#e8dcc8] placeholder-[#9b7a4a] focus:outline-none focus:border-[#8b2525]/70 transition-colors" />
             <button type="submit" disabled={loading}
-              className="w-full py-3 bg-gradient-to-r from-[#5a4428] to-[#7a5c35] hover:from-[#7a5c35] hover:to-[#9b7a4a] disabled:opacity-50 rounded-xl text-[#a83232] font-display font-semibold text-lg border-2 border-[#8b2525]/40 transition-all">
+              className="w-full py-3 bg-[#d4bc8e] hover:bg-[#c4a87a] disabled:opacity-50 rounded-xl text-[#4a1010] font-display font-bold text-lg border-2 border-[#b89a6a] transition-all">
               {loading ? "Скрепление..." : "Скрепить Клятву"}
             </button>
           </form>
