@@ -1,5 +1,5 @@
 import { prisma } from "../lib/prisma";
-import type { AdaptationSuggestion } from "@windgym/shared";
+import type { AdaptationSuggestion } from "../types/shared";
 
 function roundToHalf(n: number): number {
   return Math.round(n * 2) / 2;
