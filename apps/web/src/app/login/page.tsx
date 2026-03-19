@@ -88,7 +88,7 @@ export default function LoginPage() {
               disabled={loading}
               className="w-full py-3 bg-[#d4bc8e] hover:bg-[#c4a87a] disabled:opacity-50 rounded-xl text-[#4a1010] font-display font-bold text-lg border-2 border-[#b89a6a] transition-all"
             >
-              {loading ? "Ожидание..." : "Войти в Семью"}
+              {loading ? "Ожидание..." : "Войти"}
             </button>
           </form>
 
