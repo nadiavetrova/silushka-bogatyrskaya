@@ -4,6 +4,7 @@ import cors from "cors";
 import authRouter from "./routes/auth";
 import workoutsRouter from "./routes/workouts";
 import exercisesRouter from "./routes/exercises";
+import profileRouter from "./routes/profile";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use("/auth", authRouter);
 app.use("/workouts", workoutsRouter);
 app.use("/exercises", exercisesRouter);
+app.use("/profile", profileRouter);
 
 app.get("/health", (_req, res) => {
   res.json({ status: "ok" });

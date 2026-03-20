@@ -27,6 +27,33 @@ export interface UserData {
   name?: string;
 }
 
+export interface ProfileData {
+  id: string;
+  email: string;
+  name: string;
+  age: number | null;
+  height: number | null;
+  bodyWeight: number | null;
+  chest: number | null;
+  waist: number | null;
+  hips: number | null;
+  biceps: number | null;
+  thigh: number | null;
+  createdAt: string;
+}
+
+export interface UpdateProfileRequest {
+  name?: string;
+  age?: number | null;
+  height?: number | null;
+  bodyWeight?: number | null;
+  chest?: number | null;
+  waist?: number | null;
+  hips?: number | null;
+  biceps?: number | null;
+  thigh?: number | null;
+}
+
 // Auth
 export interface RegisterRequest {
   email: string;

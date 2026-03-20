@@ -7,6 +7,8 @@ import type {
   ExerciseData,
   CreateExerciseRequest,
   AdaptationSuggestion,
+  ProfileData,
+  UpdateProfileRequest,
 } from "./types";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
@@ -60,4 +62,9 @@ export const api = {
     request<{ message: string }>(`/workouts/${id}`, { method: "DELETE" }),
   getNextWorkout: () =>
     request<{ suggestions: AdaptationSuggestion[] }>("/workouts/next"),
+  getProfile: () => request<ProfileData>("/profile"),
+  updateProfile: (data: UpdateProfileRequest) =>
+    request<ProfileData>("/profile", { method: "PUT", body: JSON.stringify(data) }),
+  deleteAccount: () =>
+    request<{ message: string }>("/profile", { method: "DELETE" }),
 };

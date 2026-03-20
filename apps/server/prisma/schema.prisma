@@ -8,12 +8,20 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(cuid())
-  email     String    @unique
-  name      String    @default("")
-  password  String
-  createdAt DateTime  @default(now())
-  workouts  Workout[]
+  id         String    @id @default(cuid())
+  email      String    @unique
+  name       String    @default("")
+  password   String
+  age        Int?
+  height     Float?
+  bodyWeight Float?
+  chest      Float?
+  waist      Float?
+  hips       Float?
+  biceps     Float?
+  thigh      Float?
+  createdAt  DateTime  @default(now())
+  workouts   Workout[]
 }
 
 model Workout {
@@ -21,7 +29,7 @@ model Workout {
   userId    String
   date      DateTime
   createdAt DateTime   @default(now())
-  user      User       @relation(fields: [userId], references: [id])
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   exercises Exercise[]
 }
 
