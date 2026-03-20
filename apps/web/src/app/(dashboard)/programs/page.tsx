@@ -474,20 +474,31 @@ export default function ProgramsPage() {
                             <span className="text-[#9b7a4a] text-sm text-center">{setIdx + 1}</span>
                             {!isBW && (
                               <input
-                                type="number"
-                                value={set.weight}
-                                onChange={(e) => updateSet(exIdx, setIdx, "weight", Number(e.target.value))}
+                                type="text"
+                                inputMode="numeric"
+                                value={set.weight === 0 ? "" : set.weight}
+                                onChange={(e) => {
+                                  const v = e.target.value;
+                                  if (v === "" || v === "0") { updateSet(exIdx, setIdx, "weight", 0); return; }
+                                  const n = parseFloat(v);
+                                  if (!isNaN(n)) updateSet(exIdx, setIdx, "weight", n);
+                                }}
+                                placeholder="0"
                                 className="bg-[#1a1918]/95 border border-[#3a3530]/50 rounded-lg px-2 py-1.5 text-[#e8dcc8] text-sm w-full focus:border-[#8b2525]/50 focus:outline-none"
-                                step={0.5}
-                                min={0}
                               />
                             )}
                             <input
-                              type="number"
-                              value={set.reps}
-                              onChange={(e) => updateSet(exIdx, setIdx, "reps", Number(e.target.value))}
+                              type="text"
+                              inputMode="numeric"
+                              value={set.reps === 0 ? "" : set.reps}
+                              onChange={(e) => {
+                                const v = e.target.value;
+                                if (v === "" || v === "0") { updateSet(exIdx, setIdx, "reps", 0); return; }
+                                const n = parseInt(v, 10);
+                                if (!isNaN(n)) updateSet(exIdx, setIdx, "reps", n);
+                              }}
+                              placeholder="0"
                               className="bg-[#1a1918]/95 border border-[#3a3530]/50 rounded-lg px-2 py-1.5 text-[#e8dcc8] text-sm w-full focus:border-[#8b2525]/50 focus:outline-none"
-                              min={1}
                             />
                             <div className="flex gap-1">
                               {(["easy", "medium", "hard"] as const).map((d) => (
