@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useWorkoutStore } from "@/stores/workout";
+import { useAuthStore } from "@/stores/auth";
 import { api } from "@/lib/api";
 
 // --- Types ---
@@ -227,6 +228,7 @@ export default function ProgramsPage() {
   const [programExercises, setProgramExercises] = useState<Record<string, ExerciseEntry[]>>({});
 
   const { workouts, fetchWorkouts } = useWorkoutStore();
+  const userName = useAuthStore((s) => s.user?.name) || "";
 
   useEffect(() => {
     fetchWorkouts();
@@ -398,7 +400,7 @@ export default function ProgramsPage() {
         <div className="absolute inset-0 bg-gradient-to-r from-[#1a1208]/90 via-[#1a1208]/70 to-transparent" />
         <div className="relative p-5">
           <p className="text-[#a83232] font-display text-lg drop-shadow">Мудрость Берегини</p>
-          <p className="text-[#d4bc8e] text-sm mt-1 drop-shadow">Запиши свой подвиг!</p>
+          <p className="text-[#d4bc8e] text-sm mt-1 drop-shadow">{userName ? `${userName}, запиши свой подвиг!` : "Запиши свой подвиг!"}</p>
         </div>
       </div>
 
