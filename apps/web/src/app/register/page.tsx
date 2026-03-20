@@ -69,6 +69,9 @@ export default function RegisterPage() {
               className="w-full py-3 bg-[#d4bc8e] hover:bg-[#c4a87a] disabled:opacity-50 rounded-xl text-[#4a1010] font-display font-bold text-lg border-2 border-[#b89a6a] transition-all">
               {loading ? "Скрепление..." : "Скрепить Клятву"}
             </button>
+            <p className="text-[#7a5c35]/60 text-[8px] text-center mt-2">
+              Нажимая кнопку, ты принимаешь условия Пользовательского соглашения и Политики конфиденциальности
+            </p>
           </form>
 
           <div className="flex items-center gap-3 my-4">

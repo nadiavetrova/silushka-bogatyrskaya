@@ -145,8 +145,15 @@ export default function ProfilePage() {
         {saving ? "Сохраняю..." : saved ? "Сохранено!" : "Сохранить"}
       </motion.button>
 
+      {/* Legal links */}
+      <div className="mt-6 pt-4 border-t border-[#3a3530]/30">
+        <a href="/about" className="block text-center text-[#b89a6a] text-xs mb-2 hover:text-[#d4bc8e]">
+          О приложении &middot; Соглашение &middot; Конфиденциальность
+        </a>
+      </div>
+
       {/* Delete account */}
-      <div className="mt-10 pt-6 border-t border-[#3a3530]/30">
+      <div className="mt-6 pt-4 border-t border-[#3a3530]/30">
         <button
           onClick={() => setShowDeleteModal(true)}
           className="w-full text-center text-[#c54545] text-xs hover:text-[#ff6666] transition-colors"
