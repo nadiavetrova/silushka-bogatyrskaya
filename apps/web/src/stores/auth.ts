@@ -9,7 +9,8 @@ interface AuthState {
   token: string | null;
   hydrated: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string, name?: string) => Promise<void>;
+  isNewUser: boolean;
   logout: () => void;
   hydrate: () => void;
 }
@@ -18,17 +19,20 @@ export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   token: null,
   hydrated: false,
+  isNewUser: false,
 
   login: async (email, password) => {
     const { token, user } = await api.login({ email, password });
     localStorage.setItem("token", token);
-    set({ token, user });
+    if (user.name) localStorage.setItem("userName", user.name);
+    set({ token, user, isNewUser: false });
   },
 
-  register: async (email, password) => {
-    const { token, user } = await api.register({ email, password });
+  register: async (email, password, name) => {
+    const { token, user } = await api.register({ email, password, name });
     localStorage.setItem("token", token);
-    set({ token, user });
+    if (user.name) localStorage.setItem("userName", user.name);
+    set({ token, user, isNewUser: true });
   },
 
   logout: () => {
@@ -41,7 +45,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split(".")[1]));
-        set({ token, user: { id: payload.userId, email: "" }, hydrated: true });
+        const name = localStorage.getItem("userName") || "";
+        set({ token, user: { id: payload.userId, email: "", name }, hydrated: true });
       } catch {
         localStorage.removeItem("token");
         set({ hydrated: true });

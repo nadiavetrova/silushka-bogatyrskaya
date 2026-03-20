@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { useAuthStore } from "@/stores/auth";
 
 export default function RegisterPage() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -24,8 +25,8 @@ export default function RegisterPage() {
     }
     setLoading(true);
     try {
-      await register(email, password);
-      router.replace("/");
+      await register(email, password, name);
+      router.replace("/welcome");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Ошибка регистрации");
     } finally {
@@ -56,6 +57,8 @@ export default function RegisterPage() {
             {error && (
               <div className="bg-[#6b1a1a]/30 border border-[#a83232]/40 rounded-lg p-3 text-[#a83232] text-sm">{error}</div>
             )}
+            <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Имя Богатыря" required
+              className="w-full px-4 py-3 bg-[#151412] border-2 border-[#7a5c35]/50 rounded-xl text-[#e8dcc8] placeholder-[#9b7a4a] focus:outline-none focus:border-[#8b2525]/70 transition-colors" />
             <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Грамота (эл. почта)" required
               className="w-full px-4 py-3 bg-[#151412] border-2 border-[#7a5c35]/50 rounded-xl text-[#e8dcc8] placeholder-[#9b7a4a] focus:outline-none focus:border-[#8b2525]/70 transition-colors" />
             <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Тайное слово" required minLength={6}

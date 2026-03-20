@@ -24,12 +24,14 @@ export interface WorkoutData {
 export interface UserData {
   id: string;
   email: string;
+  name?: string;
 }
 
 // Auth
 export interface RegisterRequest {
   email: string;
   password: string;
+  name?: string;
 }
 
 export interface LoginRequest {

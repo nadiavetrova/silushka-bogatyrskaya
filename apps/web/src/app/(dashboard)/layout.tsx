@@ -35,7 +35,7 @@ export default function DashboardLayout({
     <AuthGuard>
       <div className="min-h-screen pb-24" style={{ backgroundImage: "linear-gradient(rgba(17,18,16,0.75), rgba(17,18,16,0.75)), url('/images/fortress.png')", backgroundSize: "cover", backgroundPosition: "center", backgroundAttachment: "fixed" }}>
         {/* Header — wooden beam style */}
-        <header className="sticky top-0 z-10 border-b-2 border-[#8b2525]/30" style={{ backgroundImage: "linear-gradient(rgba(17,18,16,0.8), rgba(17,18,16,0.8)), url('/images/kora.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
+        <header className="sticky top-0 z-10 border-b-2 border-[#8b2525]/30" style={{ backgroundImage: "linear-gradient(rgba(17,18,16,0.8), rgba(17,18,16,0.8)), url('/images/tree.png')", backgroundSize: "cover", backgroundPosition: "center" }}>
           <div className="max-w-lg mx-auto px-4 h-14 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <img src="/images/bulava.png" alt="" className="w-12 h-12 object-contain rotate-90" />

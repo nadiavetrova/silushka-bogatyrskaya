@@ -444,9 +444,9 @@ export default function ProgramsPage() {
                           lastEntry.difficulty === "easy" ? "легко" : lastEntry.difficulty === "medium" ? "средне" : "тяжело"
                         }) → {rec.note}
                       </p>
-                    ) : setIdx === 0 ? (
+                    ) : !lastEntry ? (
                       <p className="text-[10px] text-[#9b7a4a]/60 mt-0.5 pl-8 italic">
-                        Впишите начальный комфортный вес
+                        Выбери Подъём Посильный!
                       </p>
                     ) : null}
                   </div>
