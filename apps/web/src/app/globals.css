@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+/* Запрет zoom на мобильных */
+html {
+  touch-action: manipulation;
+}
+
+/* Запрет zoom при фокусе на инпутах iOS */
+input, select, textarea {
+  font-size: 16px !important;
+}
+
 @font-face {
   font-family: 'Slovic';
   src: url('/fonts/Slovic_Demo-Historic.otf') format('opentype');
