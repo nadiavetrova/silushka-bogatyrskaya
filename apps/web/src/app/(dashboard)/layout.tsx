@@ -58,7 +58,7 @@ export default function DashboardLayout({
                 className="hover:opacity-80 transition-opacity"
                 title="Выйти"
               >
-                <img src="/images/exit.png" alt="Выйти" className="w-10 h-10 object-contain" />
+                <img src="/images/exit.png" alt="Выйти" className="w-12 h-12 object-contain" />
               </button>
             </div>
           </div>
