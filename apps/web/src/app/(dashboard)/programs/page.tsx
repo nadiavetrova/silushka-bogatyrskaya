@@ -180,6 +180,19 @@ function getSetRecommendation(
   }
 }
 
+// --- LocalStorage for custom exercise lists per program ---
+const CUSTOM_EX_KEY = "silushka_custom_exercises";
+
+function loadCustomExercises(): Record<string, string[]> {
+  if (typeof window === "undefined") return {};
+  try { return JSON.parse(localStorage.getItem(CUSTOM_EX_KEY) || "{}"); }
+  catch { return {}; }
+}
+
+function saveCustomExercises(data: Record<string, string[]>) {
+  localStorage.setItem(CUSTOM_EX_KEY, JSON.stringify(data));
+}
+
 // --- LocalStorage for per-set history (supplement to DB) ---
 const STORAGE_KEY = "silushka_set_history";
 
@@ -248,19 +261,30 @@ export default function ProgramsPage() {
     return map;
   }, [setHistory]);
 
-  // Initialize exercises for current program
+  // Initialize exercises for current program (from localStorage or defaults)
   useEffect(() => {
-    // Skip if already initialized
+    // Skip if already initialized in this session
     if (programExercises[selectedProgram]) return;
-    const entries: ExerciseEntry[] = program.exercises.map((ex) => {
+
+    // Check localStorage for custom exercise list
+    const customLists = loadCustomExercises();
+    const savedNames = customLists[selectedProgram];
+
+    // Use saved list or default
+    const exerciseNames = savedNames || program.exercises.map((ex) => ex.name);
+
+    const entries: ExerciseEntry[] = exerciseNames.map((name) => {
+      const progEx = program.exercises.find((pe) => pe.name === name);
+      const numSets = progEx?.numSets || 4;
       const sets: SetEntry[] = [];
-      for (let i = 0; i < ex.numSets; i++) {
-        const key = `${ex.name}|${i}`;
+      for (let i = 0; i < numSets; i++) {
+        const key = `${name}|${i}`;
         const hist = setHistories.get(key) || [];
-        const rec = getSetRecommendation(ex, hist);
+        const fallback: ProgramExercise = { name, muscles: "", numSets: 4, minReps: 8, maxReps: 12, startWeight: 10, weightStep: 2, equipment: "dumbbell" };
+        const rec = getSetRecommendation(progEx || fallback, hist);
         sets.push({ weight: rec.weight, reps: rec.reps, difficulty: "" });
       }
-      return { name: ex.name, sets };
+      return { name, sets };
     });
     setProgramExercises((prev) => ({ ...prev, [selectedProgram]: entries }));
     setSaved(false);
@@ -283,6 +307,13 @@ export default function ProgramsPage() {
     setSaved(false);
   };
 
+  // Persist exercise names to localStorage
+  const persistExerciseNames = (exList: ExerciseEntry[]) => {
+    const customLists = loadCustomExercises();
+    customLists[selectedProgram] = exList.map((e) => e.name);
+    saveCustomExercises(customLists);
+  };
+
   // Add exercise
   const addExercise = (name: string) => {
     if (!name.trim()) return;
@@ -292,13 +323,14 @@ export default function ProgramsPage() {
       exList.push({
         name: name.trim(),
         sets: [
-          { weight: 10, reps: 12, difficulty: "" },
-          { weight: 10, reps: 12, difficulty: "" },
-          { weight: 10, reps: 12, difficulty: "" },
-          { weight: 10, reps: 12, difficulty: "" },
+          { weight: 0, reps: 12, difficulty: "" },
+          { weight: 0, reps: 12, difficulty: "" },
+          { weight: 0, reps: 12, difficulty: "" },
+          { weight: 0, reps: 12, difficulty: "" },
         ],
       });
       copy[selectedProgram] = exList;
+      persistExerciseNames(exList);
       return copy;
     });
     setNewExName("");
@@ -306,13 +338,14 @@ export default function ProgramsPage() {
     setSaved(false);
   };
 
-  // Remove exercise
+  // Remove exercise (permanent — saved to localStorage)
   const removeExercise = (exIdx: number) => {
     setProgramExercises((prev) => {
       const copy = { ...prev };
       const exList = [...(copy[selectedProgram] || [])];
       exList.splice(exIdx, 1);
       copy[selectedProgram] = exList;
+      persistExerciseNames(exList);
       return copy;
     });
     setSaved(false);
