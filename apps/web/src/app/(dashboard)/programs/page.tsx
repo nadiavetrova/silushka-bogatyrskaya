@@ -449,59 +449,63 @@ export default function ProgramsPage() {
                 ) : null;
               })()}
 
-              {/* Column headers */}
-              <div className="grid grid-cols-[2rem_1fr_1fr_auto] gap-2 mb-2 px-1">
-                <span className="text-[#9b7a4a] text-[10px]">#</span>
-                <span className="text-[#9b7a4a] text-[10px]">Вес (кг)</span>
-                <span className="text-[#9b7a4a] text-[10px]">Повт.</span>
-                <span className="text-[#9b7a4a] text-[10px] text-center">Как?</span>
-              </div>
-
-              {/* Sets */}
-              {exercise.sets.map((set, setIdx) => {
-                const key = `${exercise.name}|${setIdx}`;
-                const hist = setHistories.get(key) || [];
-                const lastEntry = hist.length > 0 ? hist[hist.length - 1] : null;
-                const progEx = program.exercises.find((pe) => pe.name === exercise.name);
-                const fallbackEx: ProgramExercise = { name: exercise.name, muscles: "", numSets: 4, minReps: 8, maxReps: 12, startWeight: 10, weightStep: 2, equipment: "dumbbell" };
-                const rec = getSetRecommendation(progEx || fallbackEx, hist);
-
+              {/* Column headers & Sets */}
+              {(() => {
+                const curProgEx = program.exercises.find((pe) => pe.name === exercise.name);
+                const isBW = curProgEx?.equipment === "bodyweight";
                 return (
-                  <div key={setIdx} className="mb-2">
-                    <div className="grid grid-cols-[2rem_1fr_1fr_auto] gap-2 items-center">
-                      <span className="text-[#9b7a4a] text-sm text-center">{setIdx + 1}</span>
-                      <input
-                        type="number"
-                        value={set.weight}
-                        onChange={(e) => updateSet(exIdx, setIdx, "weight", Number(e.target.value))}
-                        className="bg-[#1a1918]/95 border border-[#3a3530]/50 rounded-lg px-2 py-1.5 text-[#e8dcc8] text-sm w-full focus:border-[#8b2525]/50 focus:outline-none"
-                        step={0.5}
-                        min={0}
-                      />
-                      <input
-                        type="number"
-                        value={set.reps}
-                        onChange={(e) => updateSet(exIdx, setIdx, "reps", Number(e.target.value))}
-                        className="bg-[#1a1918]/95 border border-[#3a3530]/50 rounded-lg px-2 py-1.5 text-[#e8dcc8] text-sm w-full focus:border-[#8b2525]/50 focus:outline-none"
-                        min={1}
-                      />
-                      <div className="flex gap-1">
-                        {(["easy", "medium", "hard"] as const).map((d) => (
-                          <button
-                            key={d}
-                            onClick={() => updateSet(exIdx, setIdx, "difficulty", set.difficulty === d ? "" : d)}
-                            className={`px-1.5 py-1 rounded text-[10px] border transition-all ${
-                              set.difficulty === d ? diffColors[d] : diffColors[""]
-                            }`}
-                          >
-                            {d === "easy" ? "Л" : d === "medium" ? "С" : "Т"}
-                          </button>
-                        ))}
-                      </div>
+                  <>
+                    <div className={`grid ${isBW ? "grid-cols-[2rem_1fr_auto]" : "grid-cols-[2rem_1fr_1fr_auto]"} gap-2 mb-2 px-1`}>
+                      <span className="text-[#9b7a4a] text-[10px]">#</span>
+                      {!isBW && <span className="text-[#9b7a4a] text-[10px]">Вес (кг)</span>}
+                      <span className="text-[#9b7a4a] text-[10px]">Повт.</span>
+                      <span className="text-[#9b7a4a] text-[10px] text-center">Как?</span>
                     </div>
+                    {exercise.sets.map((set, setIdx) => {
+                      const key = `${exercise.name}|${setIdx}`;
+                      const hist = setHistories.get(key) || [];
+                      const lastEntry = hist.length > 0 ? hist[hist.length - 1] : null;
+                      const fallbackEx: ProgramExercise = { name: exercise.name, muscles: "", numSets: 4, minReps: 8, maxReps: 12, startWeight: 10, weightStep: 2, equipment: "dumbbell" };
+                      const rec = getSetRecommendation(curProgEx || fallbackEx, hist);
+
+                      return (
+                        <div key={setIdx} className="mb-2">
+                          <div className={`grid ${isBW ? "grid-cols-[2rem_1fr_auto]" : "grid-cols-[2rem_1fr_1fr_auto]"} gap-2 items-center`}>
+                            <span className="text-[#9b7a4a] text-sm text-center">{setIdx + 1}</span>
+                            {!isBW && (
+                              <input
+                                type="number"
+                                value={set.weight}
+                                onChange={(e) => updateSet(exIdx, setIdx, "weight", Number(e.target.value))}
+                                className="bg-[#1a1918]/95 border border-[#3a3530]/50 rounded-lg px-2 py-1.5 text-[#e8dcc8] text-sm w-full focus:border-[#8b2525]/50 focus:outline-none"
+                                step={0.5}
+                                min={0}
+                              />
+                            )}
+                            <input
+                              type="number"
+                              value={set.reps}
+                              onChange={(e) => updateSet(exIdx, setIdx, "reps", Number(e.target.value))}
+                              className="bg-[#1a1918]/95 border border-[#3a3530]/50 rounded-lg px-2 py-1.5 text-[#e8dcc8] text-sm w-full focus:border-[#8b2525]/50 focus:outline-none"
+                              min={1}
+                            />
+                            <div className="flex gap-1">
+                              {(["easy", "medium", "hard"] as const).map((d) => (
+                                <button
+                                  key={d}
+                                  onClick={() => updateSet(exIdx, setIdx, "difficulty", set.difficulty === d ? "" : d)}
+                                  className={`px-1.5 py-1 rounded text-[10px] border transition-all ${
+                                    set.difficulty === d ? diffColors[d] : diffColors[""]
+                                  }`}
+                                >
+                                  {d === "easy" ? "Л" : d === "medium" ? "С" : "Т"}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
                     {lastEntry ? (
                       <p className="text-[10px] text-[#9b7a4a] mt-0.5 pl-8">
-                        Было: {lastEntry.weight}кг × {lastEntry.reps} ({
+                        Было: {!isBW && `${lastEntry.weight}кг × `}{lastEntry.reps} повт. ({
                           lastEntry.difficulty === "easy" ? "легко" : lastEntry.difficulty === "medium" ? "средне" : "тяжело"
                         }) → {rec.note}
                       </p>
@@ -510,9 +514,12 @@ export default function ProgramsPage() {
                         Выбери Подъём Посильный!
                       </p>
                     ) : null}
-                  </div>
+                        </div>
+                      );
+                    })}
+                  </>
                 );
-              })}
+              })()}
             </motion.div>
           ))}
         </motion.div>
