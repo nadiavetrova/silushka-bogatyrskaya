@@ -23,7 +23,7 @@ interface Program {
   title: string;
   subtitle: string;
   muscles: string;
-  exercises: { name: string; numSets: number; targetReps: number; startWeight: number }[];
+  exercises: { name: string; muscles: string; numSets: number; targetReps: number; startWeight: number }[];
 }
 
 // --- Default programs ---
@@ -35,14 +35,14 @@ const DEFAULT_PROGRAMS: Program[] = [
     subtitle: "Крепость Щита и Размаха Топора",
     muscles: "Грудные, дельты, трицепс",
     exercises: [
-      { name: "Жим гантелей сидя", numSets: 4, targetReps: 12, startWeight: 10 },
-      { name: "Отведение гантелей в стороны", numSets: 4, targetReps: 12, startWeight: 5 },
-      { name: "Подъём гантелей перед собой поочерёдно", numSets: 4, targetReps: 12, startWeight: 5 },
-      { name: "Разведение гантелей в стороны в наклоне", numSets: 4, targetReps: 12, startWeight: 5 },
-      { name: "Тяга штанги к подбородку", numSets: 4, targetReps: 12, startWeight: 15 },
-      { name: "Жим штанги (гантелей) лёжа", numSets: 4, targetReps: 12, startWeight: 20 },
-      { name: "Жим штанги (гантелей) на наклонной скамье", numSets: 4, targetReps: 12, startWeight: 15 },
-      { name: "Сведение рук с гантелями лёжа", numSets: 4, targetReps: 12, startWeight: 6 },
+      { name: "Жим гантелей сидя", muscles: "Плечи (дельты), трицепсы", numSets: 4, targetReps: 12, startWeight: 10 },
+      { name: "Отведение гантелей в стороны", muscles: "Средний пучок плеча (дельты)", numSets: 4, targetReps: 12, startWeight: 5 },
+      { name: "Подъём гантелей перед собой поочерёдно", muscles: "Передний пучок плеча (дельты)", numSets: 4, targetReps: 12, startWeight: 5 },
+      { name: "Разведение гантелей в стороны в наклоне", muscles: "Задний пучок плеча, спина", numSets: 4, targetReps: 12, startWeight: 5 },
+      { name: "Тяга штанги к подбородку", muscles: "Плечи (дельты), трапеции", numSets: 4, targetReps: 12, startWeight: 15 },
+      { name: "Жим штанги (гантелей) лёжа", muscles: "Грудные мышцы, трицепсы", numSets: 4, targetReps: 12, startWeight: 20 },
+      { name: "Жим штанги (гантелей) на наклонной скамье", muscles: "Верх грудных, трицепсы", numSets: 4, targetReps: 12, startWeight: 15 },
+      { name: "Сведение рук с гантелями лёжа", muscles: "Грудные мышцы", numSets: 4, targetReps: 12, startWeight: 6 },
     ],
   },
   {
@@ -51,13 +51,13 @@ const DEFAULT_PROGRAMS: Program[] = [
     subtitle: "Мощь Хребта и Рук Булатного Меча",
     muscles: "Широчайшие, ромбовидные, бицепс",
     exercises: [
-      { name: "Тяга вертикального блока широкий хват", numSets: 4, targetReps: 12, startWeight: 30 },
-      { name: "Тяга вертикального блока узкий хват", numSets: 4, targetReps: 12, startWeight: 25 },
-      { name: "Тяга горизонтального блока", numSets: 4, targetReps: 12, startWeight: 25 },
-      { name: "Тяга штанги в наклоне", numSets: 4, targetReps: 12, startWeight: 20 },
-      { name: "Пуловер в кроссовере", numSets: 4, targetReps: 12, startWeight: 15 },
-      { name: "Подъём гантелей стоя", numSets: 4, targetReps: 12, startWeight: 8 },
-      { name: "Сгибание рук в нижнем блоке на бицепс", numSets: 4, targetReps: 12, startWeight: 10 },
+      { name: "Тяга вертикального блока широкий хват", muscles: "Широчайшие спины, бицепсы", numSets: 4, targetReps: 12, startWeight: 30 },
+      { name: "Тяга вертикального блока узкий хват", muscles: "Широчайшие спины, бицепсы", numSets: 4, targetReps: 12, startWeight: 25 },
+      { name: "Тяга горизонтального блока", muscles: "Середина спины (широчайшие, ромбовидные)", numSets: 4, targetReps: 12, startWeight: 25 },
+      { name: "Тяга штанги в наклоне", muscles: "Широчайшие спины, бицепсы", numSets: 4, targetReps: 12, startWeight: 20 },
+      { name: "Пуловер в кроссовере", muscles: "Широчайшие спины, грудные", numSets: 4, targetReps: 12, startWeight: 15 },
+      { name: "Подъём гантелей стоя", muscles: "Бицепсы", numSets: 4, targetReps: 12, startWeight: 8 },
+      { name: "Сгибание рук в нижнем блоке на бицепс", muscles: "Бицепсы", numSets: 4, targetReps: 12, startWeight: 10 },
     ],
   },
   {
@@ -66,15 +66,15 @@ const DEFAULT_PROGRAMS: Program[] = [
     subtitle: "Крепость Корней и Удара Копья",
     muscles: "Квадрицепс, ягодичные, бицепс бедра, трицепс",
     exercises: [
-      { name: "Приседания со штангой", numSets: 4, targetReps: 12, startWeight: 20 },
-      { name: "Жим ногами в тренажёре", numSets: 4, targetReps: 12, startWeight: 40 },
-      { name: "Выпады со штангой или гантелями", numSets: 4, targetReps: 12, startWeight: 10 },
-      { name: "Румынская тяга с упором одной ноги на стену", numSets: 4, targetReps: 12, startWeight: 10 },
-      { name: "Отведение ноги назад в кроссовере", numSets: 4, targetReps: 15, startWeight: 10 },
-      { name: "Отведение ноги в сторону в кроссовере", numSets: 4, targetReps: 15, startWeight: 10 },
-      { name: "Разгибание рук в верхнем блоке", numSets: 4, targetReps: 12, startWeight: 15 },
-      { name: "Французский жим с гантелью стоя", numSets: 4, targetReps: 12, startWeight: 8 },
-      { name: "Обратные отжимания от скамьи", numSets: 4, targetReps: 15, startWeight: 0 },
+      { name: "Приседания со штангой", muscles: "Квадрицепсы, ягодичные, спина", numSets: 4, targetReps: 12, startWeight: 20 },
+      { name: "Жим ногами в тренажёре", muscles: "Квадрицепсы, ягодичные, бицепс бедра", numSets: 4, targetReps: 12, startWeight: 40 },
+      { name: "Выпады со штангой или гантелями", muscles: "Квадрицепсы, ягодичные, стабилизаторы", numSets: 4, targetReps: 12, startWeight: 10 },
+      { name: "Румынская тяга с упором одной ноги на стену", muscles: "Задняя поверхность бедра, ягодичные", numSets: 4, targetReps: 12, startWeight: 10 },
+      { name: "Отведение ноги назад в кроссовере", muscles: "Ягодичные мышцы", numSets: 4, targetReps: 15, startWeight: 10 },
+      { name: "Отведение ноги в сторону в кроссовере", muscles: "Средние ягодичные мышцы", numSets: 4, targetReps: 15, startWeight: 10 },
+      { name: "Разгибание рук в верхнем блоке", muscles: "Трицепсы", numSets: 4, targetReps: 12, startWeight: 15 },
+      { name: "Французский жим с гантелью стоя", muscles: "Трицепсы", numSets: 4, targetReps: 12, startWeight: 8 },
+      { name: "Обратные отжимания от скамьи", muscles: "Трицепсы", numSets: 4, targetReps: 15, startWeight: 0 },
     ],
   },
 ];
@@ -388,7 +388,7 @@ export default function ProgramsPage() {
               transition={{ delay: exIdx * 0.03 }}
               className="card-wood rounded-xl p-4 border border-[#3a3530]/50"
             >
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center justify-between mb-1">
                 <h4 className="text-[#e8dcc8] font-medium">{exercise.name}</h4>
                 <button
                   onClick={() => removeExercise(exIdx)}
@@ -397,6 +397,12 @@ export default function ProgramsPage() {
                   ✕
                 </button>
               </div>
+              {(() => {
+                const progEx = program.exercises.find((pe) => pe.name === exercise.name);
+                return progEx?.muscles ? (
+                  <p className="text-[#9b7a4a] text-[10px] mb-3 pl-0.5 italic">{progEx.muscles}</p>
+                ) : null;
+              })()}
 
               {/* Column headers */}
               <div className="grid grid-cols-[2rem_1fr_1fr_auto] gap-2 mb-2 px-1">
