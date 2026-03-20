@@ -54,7 +54,7 @@ export default function ProgressPage() {
     <div>
       {/* Wheat field header */}
       <div className="relative rounded-xl overflow-hidden mb-4 border border-[#7a5c35]/30">
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/images/wheat-field.png')" }} />
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/images/gym.png')", backgroundPosition: "center 30%" }} />
         <div className="absolute inset-0 bg-gradient-to-r from-[#1a1208]/85 via-[#1a1208]/60 to-transparent" />
         <div className="relative p-5">
           <h2 className="font-display text-xl font-bold text-[#d4bc8e] drop-shadow">Ведомость Силушки</h2>
