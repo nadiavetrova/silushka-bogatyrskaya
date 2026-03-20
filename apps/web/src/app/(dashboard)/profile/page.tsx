@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { api } from "@/lib/api";
 import { useAuthStore } from "@/stores/auth";
-import type { ProfileData } from "@/lib/types";
+import type { ProfileData, MeasurementData } from "@/lib/types";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -16,6 +16,8 @@ export default function ProfilePage() {
   const [saved, setSaved] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [measurements, setMeasurements] = useState<MeasurementData[]>([]);
+  const [savingMeasurement, setSavingMeasurement] = useState(false);
 
   // Form fields
   const [name, setName] = useState("");
@@ -42,6 +44,7 @@ export default function ProfilePage() {
       setThigh(p.thigh ? String(p.thigh) : "");
       setLoading(false);
     }).catch(() => setLoading(false));
+    api.getMeasurements().then(setMeasurements).catch(() => {});
   }, []);
 
   const handleSave = async () => {
@@ -144,6 +147,78 @@ export default function ProfilePage() {
       >
         {saving ? "Сохраняю..." : saved ? "Сохранено!" : "Сохранить"}
       </motion.button>
+
+      {/* Save measurement */}
+      <motion.button
+        whileTap={{ scale: 0.97 }}
+        onClick={async () => {
+          setSavingMeasurement(true);
+          try {
+            const m = await api.createMeasurement({
+              bodyWeight: bodyWeight ? parseFloat(bodyWeight) : null,
+              chest: chest ? parseFloat(chest) : null,
+              waist: waist ? parseFloat(waist) : null,
+              hips: hips ? parseFloat(hips) : null,
+              biceps: biceps ? parseFloat(biceps) : null,
+              thigh: thigh ? parseFloat(thigh) : null,
+            });
+            setMeasurements((prev) => [m, ...prev]);
+            setSavingMeasurement(false);
+          } catch {
+            alert("Ошибка записи замера");
+            setSavingMeasurement(false);
+          }
+        }}
+        disabled={savingMeasurement}
+        className="w-full mt-3 py-2 rounded-xl text-[10px] text-[#b89a6a] border border-[#3a3530]/50 disabled:opacity-50"
+      >
+        {savingMeasurement ? "Записываю..." : "Записать замеры в историю"}
+      </motion.button>
+
+      {/* Measurement history */}
+      {measurements.length > 0 && (
+        <div className="mt-6 pt-4 border-t border-[#3a3530]/30">
+          <h3 className="text-[#a83232] font-display text-sm mb-3">Летопись Замеров</h3>
+          <div className="space-y-2">
+            {measurements.map((m, idx) => {
+              const prev = measurements[idx + 1];
+              const date = new Date(m.date).toLocaleDateString("ru-RU", { day: "numeric", month: "short", year: "numeric" });
+              const diff = (val: number | null, prevVal: number | null) => {
+                if (val == null || prevVal == null) return null;
+                const d = val - prevVal;
+                if (d === 0) return null;
+                return d > 0 ? `+${d.toFixed(1)}` : d.toFixed(1);
+              };
+              const fields = [
+                { label: "Вес", val: m.bodyWeight, prevVal: prev?.bodyWeight, unit: "кг" },
+                { label: "Грудь", val: m.chest, prevVal: prev?.chest, unit: "см" },
+                { label: "Талия", val: m.waist, prevVal: prev?.waist, unit: "см" },
+                { label: "Бёдра", val: m.hips, prevVal: prev?.hips, unit: "см" },
+                { label: "Бицепс", val: m.biceps, prevVal: prev?.biceps, unit: "см" },
+                { label: "Бедро", val: m.thigh, prevVal: prev?.thigh, unit: "см" },
+              ];
+              return (
+                <div key={m.id} className="card-wood rounded-lg p-3 border border-[#3a3530]/30">
+                  <p className="text-[#b89a6a] text-[10px] mb-1.5">{date}</p>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {fields.map((f) => f.val != null && (
+                      <div key={f.label} className="text-center">
+                        <p className="text-[#9b7a4a] text-[8px]">{f.label}</p>
+                        <p className="text-[#e8dcc8] text-xs">{f.val} {f.unit}</p>
+                        {prev && diff(f.val, f.prevVal) && (
+                          <p className={`text-[8px] ${Number(diff(f.val, f.prevVal)) > 0 ? "text-[#5ea352]" : "text-[#c54545]"}`}>
+                            {diff(f.val, f.prevVal)} {f.unit}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Legal links */}
       <div className="mt-6 pt-4 border-t border-[#3a3530]/30">

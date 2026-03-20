@@ -20,8 +20,22 @@ model User {
   hips       Float?
   biceps     Float?
   thigh      Float?
-  createdAt  DateTime  @default(now())
-  workouts   Workout[]
+  createdAt    DateTime      @default(now())
+  workouts     Workout[]
+  measurements Measurement[]
+}
+
+model Measurement {
+  id         String   @id @default(cuid())
+  userId     String
+  date       DateTime @default(now())
+  bodyWeight Float?
+  chest      Float?
+  waist      Float?
+  hips       Float?
+  biceps     Float?
+  thigh      Float?
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Workout {

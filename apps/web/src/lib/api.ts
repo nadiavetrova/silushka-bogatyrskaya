@@ -9,6 +9,7 @@ import type {
   AdaptationSuggestion,
   ProfileData,
   UpdateProfileRequest,
+  MeasurementData,
 } from "./types";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
@@ -67,4 +68,7 @@ export const api = {
     request<ProfileData>("/profile", { method: "PUT", body: JSON.stringify(data) }),
   deleteAccount: () =>
     request<{ message: string }>("/profile", { method: "DELETE" }),
+  getMeasurements: () => request<MeasurementData[]>("/profile/measurements"),
+  createMeasurement: (data: Omit<MeasurementData, "id" | "date">) =>
+    request<MeasurementData>("/profile/measurements", { method: "POST", body: JSON.stringify(data) }),
 };

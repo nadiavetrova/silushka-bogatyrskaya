@@ -62,6 +62,41 @@ router.put("/", async (req, res) => {
   }
 });
 
+// GET /profile/measurements — история замеров
+router.get("/measurements", async (req, res) => {
+  try {
+    const measurements = await prisma.measurement.findMany({
+      where: { userId: req.userId },
+      orderBy: { date: "desc" },
+      take: 50,
+    });
+    res.json(measurements);
+  } catch {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// POST /profile/measurements — записать новый замер
+router.post("/measurements", async (req, res) => {
+  try {
+    const { bodyWeight, chest, waist, hips, biceps, thigh } = req.body;
+    const measurement = await prisma.measurement.create({
+      data: {
+        userId: req.userId!,
+        bodyWeight: bodyWeight ?? null,
+        chest: chest ?? null,
+        waist: waist ?? null,
+        hips: hips ?? null,
+        biceps: biceps ?? null,
+        thigh: thigh ?? null,
+      },
+    });
+    res.json(measurement);
+  } catch {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 // DELETE /profile — удалить аккаунт и все данные
 router.delete("/", async (req, res) => {
   try {

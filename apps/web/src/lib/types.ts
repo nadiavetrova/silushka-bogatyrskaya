@@ -54,6 +54,17 @@ export interface UpdateProfileRequest {
   thigh?: number | null;
 }
 
+export interface MeasurementData {
+  id: string;
+  date: string;
+  bodyWeight: number | null;
+  chest: number | null;
+  waist: number | null;
+  hips: number | null;
+  biceps: number | null;
+  thigh: number | null;
+}
+
 // Auth
 export interface RegisterRequest {
   email: string;
