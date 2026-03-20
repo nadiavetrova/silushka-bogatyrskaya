@@ -70,7 +70,9 @@ export default function RegisterPage() {
               {loading ? "Скрепление..." : "Скрепить Клятву"}
             </button>
             <p className="text-[#7a5c35]/60 text-[8px] text-center mt-2">
-              Нажимая кнопку, ты принимаешь условия Пользовательского соглашения и Политики конфиденциальности
+              Нажимая кнопку, ты принимаешь условия{" "}
+              <a href="https://silushka-bogatyrskaya-web.vercel.app/about" target="_blank" rel="noopener noreferrer" className="underline text-[#b89a6a]/60">Пользовательского соглашения</a>{" "}и{" "}
+              <a href="https://silushka-bogatyrskaya-web.vercel.app/about" target="_blank" rel="noopener noreferrer" className="underline text-[#b89a6a]/60">Политики конфиденциальности</a>
             </p>
           </form>
 
