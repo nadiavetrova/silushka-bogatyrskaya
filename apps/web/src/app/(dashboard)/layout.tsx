@@ -45,20 +45,20 @@ export default function DashboardLayout({
                 Силушка Богатырская
               </h1>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-5">
               <Link
                 href="/profile"
                 className="hover:opacity-80 transition-opacity"
                 title="Личная Грамота"
               >
-                <img src="/images/kabinet.png" alt="Личный кабинет" className="w-6 h-6 object-contain" />
+                <img src="/images/kabinet.png" alt="Личный кабинет" className="w-8 h-8 object-contain" />
               </Link>
               <button
                 onClick={logout}
                 className="hover:opacity-80 transition-opacity"
                 title="Выйти"
               >
-                <img src="/images/exit.png" alt="Выйти" className="w-6 h-6 object-contain" />
+                <img src="/images/exit.png" alt="Выйти" className="w-8 h-8 object-contain" />
               </button>
             </div>
           </div>
