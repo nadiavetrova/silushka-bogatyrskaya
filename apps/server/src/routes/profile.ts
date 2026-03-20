@@ -97,6 +97,20 @@ router.post("/measurements", async (req, res) => {
   }
 });
 
+// DELETE /profile/measurements/:id — удалить замер
+router.delete("/measurements/:id", async (req, res) => {
+  try {
+    const measurement = await prisma.measurement.findFirst({
+      where: { id: req.params.id, userId: req.userId },
+    });
+    if (!measurement) { res.status(404).json({ message: "Not found" }); return; }
+    await prisma.measurement.delete({ where: { id: req.params.id } });
+    res.json({ message: "Deleted" });
+  } catch {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 // DELETE /profile — удалить аккаунт и все данные
 router.delete("/", async (req, res) => {
   try {

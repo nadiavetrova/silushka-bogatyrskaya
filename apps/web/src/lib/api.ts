@@ -71,4 +71,6 @@ export const api = {
   getMeasurements: () => request<MeasurementData[]>("/profile/measurements"),
   createMeasurement: (data: Omit<MeasurementData, "id" | "date">) =>
     request<MeasurementData>("/profile/measurements", { method: "POST", body: JSON.stringify(data) }),
+  deleteMeasurement: (id: string) =>
+    request<{ message: string }>(`/profile/measurements/${id}`, { method: "DELETE" }),
 };

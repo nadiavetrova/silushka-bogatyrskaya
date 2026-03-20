@@ -206,7 +206,20 @@ export default function ProfilePage() {
               ];
               return (
                 <div key={m.id} className="card-wood rounded-lg p-3 border border-[#3a3530]/30">
-                  <p className="text-[#b89a6a] text-[10px] mb-1.5">{date}</p>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <p className="text-[#b89a6a] text-[10px]">{date}</p>
+                    <button
+                      onClick={async () => {
+                        try {
+                          await api.deleteMeasurement(m.id);
+                          setMeasurements((prev) => prev.filter((x) => x.id !== m.id));
+                        } catch { alert("Ошибка удаления"); }
+                      }}
+                      className="text-[#8b2525]/40 hover:text-[#c54545] text-[10px] px-1"
+                    >
+                      ✕
+                    </button>
+                  </div>
                   <div className="grid grid-cols-3 gap-1.5">
                     {fields.map((f) => f.val != null && (
                       <div key={f.label} className="text-center">
