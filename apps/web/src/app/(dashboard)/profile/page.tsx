@@ -84,7 +84,6 @@ export default function ProfilePage() {
   };
 
   const fields = [
-    { label: "Имя", value: name, set: setName, type: "text", placeholder: "Как тебя величать?" },
     { label: "Возраст", value: age, set: setAge, type: "numeric", placeholder: "Лет" },
     { label: "Рост (см)", value: height, set: setHeight, type: "numeric", placeholder: "см" },
     { label: "Вес (кг)", value: bodyWeight, set: setBodyWeight, type: "numeric", placeholder: "кг" },
@@ -107,7 +106,7 @@ export default function ProfilePage() {
         <div className="absolute inset-0 bg-gradient-to-r from-[#1a1208]/90 via-[#1a1208]/70 to-transparent" />
         <div className="relative p-5">
           <p className="text-[#a83232] font-display text-lg drop-shadow">Личная Грамота</p>
-          <p className="text-[#d4bc8e] text-sm mt-1 drop-shadow">Данные о тебе, Богатырь</p>
+          <p className="text-[#d4bc8e] text-sm mt-1 drop-shadow">{name ? `${name}, Богатырушка` : "Данные о тебе, Богатырь"}</p>
         </div>
       </div>
 
