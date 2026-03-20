@@ -22,9 +22,11 @@ export default function ProgressPage() {
 
     for (const workout of sorted) {
       const dateStr = new Date(workout.date).toLocaleDateString("ru-RU", { month: "short", day: "numeric" });
-      for (const exercise of workout.exercises) {
+      for (const exercise of (workout.exercises || [])) {
+        if (!exercise || !exercise.name) continue;
         if (!exerciseMap.has(exercise.name)) exerciseMap.set(exercise.name, []);
-        const maxWeight = Math.max(...exercise.sets.map((s: { weight: number }) => s.weight), 0);
+        const sets = exercise.sets || [];
+        const maxWeight = sets.length > 0 ? Math.max(...sets.map((s: { weight: number }) => s.weight || 0), 0) : 0;
         exerciseMap.get(exercise.name)!.push({ date: dateStr, weight: maxWeight });
       }
     }
