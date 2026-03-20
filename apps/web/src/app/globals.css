@@ -1,13 +1,22 @@
 @import "tailwindcss";
 
 /* Запрет zoom на мобильных */
-html {
+html, body {
+  touch-action: manipulation;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  overscroll-behavior: none;
+}
+
+/* Запрет zoom при фокусе на инпутах iOS (16px предотвращает auto-zoom) */
+input, select, textarea {
+  font-size: 16px !important;
   touch-action: manipulation;
 }
 
-/* Запрет zoom при фокусе на инпутах iOS */
-input, select, textarea {
-  font-size: 16px !important;
+/* Запрет pinch-zoom */
+* {
+  touch-action: pan-x pan-y;
 }
 
 @font-face {
