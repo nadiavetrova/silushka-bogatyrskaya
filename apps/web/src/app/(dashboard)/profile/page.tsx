@@ -102,7 +102,7 @@ export default function ProfilePage() {
     <div>
       {/* Header */}
       <div className="relative rounded-xl overflow-hidden mb-6 border border-[#3a3530]/50">
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/images/cabin-fire.png')" }} />
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/images/gym.png')" }} />
         <div className="absolute inset-0 bg-gradient-to-r from-[#1a1208]/90 via-[#1a1208]/70 to-transparent" />
         <div className="relative p-5">
           <p className="text-[#a83232] font-display text-lg drop-shadow">Личная Грамота</p>
