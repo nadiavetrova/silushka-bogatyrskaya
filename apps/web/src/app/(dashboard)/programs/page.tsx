@@ -211,6 +211,17 @@ export default function ProgramsPage() {
   const [newExName, setNewExName] = useState("");
   const [showAddEx, setShowAddEx] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [collapsedExercises, setCollapsedExercises] = useState<Record<string, boolean>>({});
+
+  const toggleCollapse = (exIdx: number) => {
+    const key = `${selectedProgram}-${exIdx}`;
+    setCollapsedExercises((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const isCollapsed = (exIdx: number) => {
+    const key = `${selectedProgram}-${exIdx}`;
+    return collapsedExercises[key] !== false; // свёрнуто по умолчанию
+  };
 
   // Editable exercises per program (stored in state, initialized from defaults)
   const [programExercises, setProgramExercises] = useState<Record<string, ExerciseEntry[]>>({});
@@ -236,8 +247,9 @@ export default function ProgramsPage() {
   }, [setHistory]);
 
   // Initialize exercises for current program
-  const initExercises = useCallback(() => {
-    if (programExercises[selectedProgram]) return; // already initialized by user
+  useEffect(() => {
+    // Skip if already initialized
+    if (programExercises[selectedProgram]) return;
     const entries: ExerciseEntry[] = program.exercises.map((ex) => {
       const sets: SetEntry[] = [];
       for (let i = 0; i < ex.numSets; i++) {
@@ -250,9 +262,8 @@ export default function ProgramsPage() {
     });
     setProgramExercises((prev) => ({ ...prev, [selectedProgram]: entries }));
     setSaved(false);
-  }, [selectedProgram, program, setHistories, programExercises]);
-
-  useEffect(() => { initExercises(); }, [initExercises]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedProgram, setHistory]);
 
   const exercises = programExercises[selectedProgram] || [];
 
@@ -433,24 +444,30 @@ export default function ProgramsPage() {
               transition={{ delay: exIdx * 0.03 }}
               className="card-wood rounded-xl p-4 border border-[#3a3530]/50"
             >
-              <div className="flex items-center justify-between mb-1">
-                <h4 className="text-[#e8dcc8] font-medium">{exercise.name}</h4>
+              <div
+                className="flex items-center justify-between cursor-pointer"
+                onClick={() => toggleCollapse(exIdx)}
+              >
+                <div className="flex items-center gap-2 flex-1">
+                  <span className="text-[#9b7a4a] text-xs">{isCollapsed(exIdx) ? "▶" : "▼"}</span>
+                  <h4 className="text-[#e8dcc8] font-medium">{exercise.name}</h4>
+                </div>
                 <button
-                  onClick={() => removeExercise(exIdx)}
+                  onClick={(e) => { e.stopPropagation(); removeExercise(exIdx); }}
                   className="text-[#8b2525]/60 hover:text-[#c54545] text-xs px-2 py-1"
                 >
                   ✕
                 </button>
               </div>
-              {(() => {
+              {!isCollapsed(exIdx) && (() => {
                 const progEx = program.exercises.find((pe) => pe.name === exercise.name);
                 return progEx?.muscles ? (
-                  <p className="text-[#9b7a4a] text-[10px] mb-3 pl-0.5 italic">{progEx.muscles}</p>
+                  <p className="text-[#9b7a4a] text-[10px] mb-3 pl-0.5 italic mt-1">{progEx.muscles}</p>
                 ) : null;
               })()}
 
               {/* Column headers & Sets */}
-              {(() => {
+              {!isCollapsed(exIdx) && (() => {
                 const curProgEx = program.exercises.find((pe) => pe.name === exercise.name);
                 const isBW = curProgEx?.equipment === "bodyweight";
                 return (
