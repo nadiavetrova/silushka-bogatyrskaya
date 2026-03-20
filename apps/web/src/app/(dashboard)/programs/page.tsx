@@ -635,6 +635,19 @@ export default function ProgramsPage() {
             + Добавить упражнение
           </button>
         )}
+        <button
+          onClick={() => {
+            if (confirm("Восстановить дефолтные упражнения для этой программы?")) {
+              const customLists = loadCustomExercises();
+              delete customLists[selectedProgram];
+              saveCustomExercises(customLists);
+              setProgramExercises((prev) => { const n = { ...prev }; delete n[selectedProgram]; return n; });
+            }
+          }}
+          className="w-full mt-2 py-1.5 rounded-xl text-xs text-[#9b7a4a] hover:text-[#d4bc8e] opacity-50 hover:opacity-100 transition-opacity"
+        >
+          ↻ Восстановить дефолтные
+        </button>
       </div>
 
       {/* Save button */}
