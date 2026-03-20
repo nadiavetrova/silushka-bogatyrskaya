@@ -78,8 +78,9 @@ const DEFAULT_PROGRAMS: Program[] = [
     subtitle: "Крепость Корней и Удара Копья",
     muscles: "Квадрицепс, ягодичные, бицепс бедра, трицепс",
     exercises: [
-      { name: "Приседания со штангой", muscles: "Квадрицепсы, ягодичные, спина", numSets: 4, minReps: 8, maxReps: 12, startWeight: 20, weightStep: 2.5, equipment: "barbell" },
+      { name: "Приседания со штангой/гантелью", muscles: "Квадрицепсы, ягодичные, спина", numSets: 4, minReps: 8, maxReps: 12, startWeight: 20, weightStep: 2.5, equipment: "barbell" },
       { name: "Жим ногами в тренажёре", muscles: "Квадрицепсы, ягодичные, бицепс бедра", numSets: 4, minReps: 10, maxReps: 15, startWeight: 40, weightStep: 10, equipment: "machine" },
+      { name: "Разгибание ног в тренажёре", muscles: "Квадрицепсы бедра", numSets: 4, minReps: 10, maxReps: 15, startWeight: 20, weightStep: 5, equipment: "machine" },
       { name: "Выпады со штангой или гантелями", muscles: "Квадрицепсы, ягодичные, стабилизаторы", numSets: 4, minReps: 8, maxReps: 12, startWeight: 10, weightStep: 2, equipment: "dumbbell" },
       { name: "Румынская тяга с упором одной ноги на стену", muscles: "Задняя поверхность бедра, ягодичные", numSets: 4, minReps: 10, maxReps: 15, startWeight: 10, weightStep: 2, equipment: "dumbbell" },
       { name: "Отведение ноги назад в кроссовере", muscles: "Ягодичные мышцы", numSets: 4, minReps: 12, maxReps: 18, startWeight: 10, weightStep: 2.5, equipment: "machine" },
