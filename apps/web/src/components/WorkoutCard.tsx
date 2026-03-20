@@ -91,7 +91,7 @@ export function WorkoutCard({ workout, onDelete }: Props) {
       {/* Header — always visible, clickable to expand */}
       <div className="flex items-center justify-between" onClick={toggleExpand}>
         <div className="flex items-center gap-2 flex-1">
-          <span className="text-[#9b7a4a] text-xs">{expanded ? "▼" : "▶"}</span>
+          <svg className="w-3 h-3 text-[#9b7a4a] flex-shrink-0" fill="currentColor" viewBox="0 0 24 24" style={{ transform: expanded ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.2s" }}><path d="M8 5v14l11-7z"/></svg>
           <div>
             <span className="text-[#b89a6a] text-sm">{date}</span>
             <span className="text-[#a83232] text-xs ml-2 font-medium">{workoutType}</span>

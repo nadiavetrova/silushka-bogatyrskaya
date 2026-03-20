@@ -451,7 +451,7 @@ export default function ProgramsPage() {
                 onClick={() => toggleCollapse(exIdx)}
               >
                 <div className="flex items-center gap-2 flex-1">
-                  <span className="text-[#9b7a4a] text-xs">{isCollapsed(exIdx) ? "▶" : "▼"}</span>
+                  <svg className="w-3 h-3 text-[#9b7a4a] flex-shrink-0" fill="currentColor" viewBox="0 0 24 24" style={{ transform: isCollapsed(exIdx) ? "rotate(0deg)" : "rotate(90deg)", transition: "transform 0.2s" }}><path d="M8 5v14l11-7z"/></svg>
                   <h4 className="text-[#e8dcc8] font-medium">{exercise.name}</h4>
                 </div>
                 <button
