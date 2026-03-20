@@ -18,12 +18,23 @@ interface ExerciseEntry {
   sets: SetEntry[];
 }
 
+interface ProgramExercise {
+  name: string;
+  muscles: string;
+  numSets: number;
+  minReps: number;
+  maxReps: number;
+  startWeight: number;
+  weightStep: number; // шаг груза в кг
+  equipment: "dumbbell" | "barbell" | "machine" | "bodyweight";
+}
+
 interface Program {
   id: string;
   title: string;
   subtitle: string;
   muscles: string;
-  exercises: { name: string; muscles: string; numSets: number; targetReps: number; startWeight: number }[];
+  exercises: ProgramExercise[];
 }
 
 // --- Default programs ---
@@ -35,14 +46,14 @@ const DEFAULT_PROGRAMS: Program[] = [
     subtitle: "Крепость Щита и Размаха Топора",
     muscles: "Грудные, дельты, трицепс",
     exercises: [
-      { name: "Жим гантелей сидя", muscles: "Плечи (дельты), трицепсы", numSets: 4, targetReps: 12, startWeight: 10 },
-      { name: "Отведение гантелей в стороны", muscles: "Средний пучок плеча (дельты)", numSets: 4, targetReps: 12, startWeight: 5 },
-      { name: "Подъём гантелей перед собой поочерёдно", muscles: "Передний пучок плеча (дельты)", numSets: 4, targetReps: 12, startWeight: 5 },
-      { name: "Разведение гантелей в стороны в наклоне", muscles: "Задний пучок плеча, спина", numSets: 4, targetReps: 12, startWeight: 5 },
-      { name: "Тяга штанги к подбородку", muscles: "Плечи (дельты), трапеции", numSets: 4, targetReps: 12, startWeight: 15 },
-      { name: "Жим штанги (гантелей) лёжа", muscles: "Грудные мышцы, трицепсы", numSets: 4, targetReps: 12, startWeight: 20 },
-      { name: "Жим штанги (гантелей) на наклонной скамье", muscles: "Верх грудных, трицепсы", numSets: 4, targetReps: 12, startWeight: 15 },
-      { name: "Сведение рук с гантелями лёжа", muscles: "Грудные мышцы", numSets: 4, targetReps: 12, startWeight: 6 },
+      { name: "Жим гантелей сидя", muscles: "Плечи (дельты), трицепсы", numSets: 4, minReps: 8, maxReps: 12, startWeight: 10, weightStep: 2, equipment: "dumbbell" },
+      { name: "Отведение гантелей в стороны", muscles: "Средний пучок плеча (дельты)", numSets: 4, minReps: 10, maxReps: 15, startWeight: 5, weightStep: 2, equipment: "dumbbell" },
+      { name: "Подъём гантелей перед собой поочерёдно", muscles: "Передний пучок плеча (дельты)", numSets: 4, minReps: 10, maxReps: 15, startWeight: 5, weightStep: 2, equipment: "dumbbell" },
+      { name: "Разведение гантелей в стороны в наклоне", muscles: "Задний пучок плеча, спина", numSets: 4, minReps: 10, maxReps: 15, startWeight: 5, weightStep: 2, equipment: "dumbbell" },
+      { name: "Тяга штанги к подбородку", muscles: "Плечи (дельты), трапеции", numSets: 4, minReps: 8, maxReps: 12, startWeight: 15, weightStep: 2.5, equipment: "barbell" },
+      { name: "Жим штанги (гантелей) лёжа", muscles: "Грудные мышцы, трицепсы", numSets: 4, minReps: 8, maxReps: 12, startWeight: 20, weightStep: 2.5, equipment: "barbell" },
+      { name: "Жим штанги (гантелей) на наклонной скамье", muscles: "Верх грудных, трицепсы", numSets: 4, minReps: 8, maxReps: 12, startWeight: 15, weightStep: 2.5, equipment: "barbell" },
+      { name: "Сведение рук с гантелями лёжа", muscles: "Грудные мышцы", numSets: 4, minReps: 10, maxReps: 15, startWeight: 6, weightStep: 2, equipment: "dumbbell" },
     ],
   },
   {
@@ -51,13 +62,13 @@ const DEFAULT_PROGRAMS: Program[] = [
     subtitle: "Мощь Хребта и Рук Булатного Меча",
     muscles: "Широчайшие, ромбовидные, бицепс",
     exercises: [
-      { name: "Тяга вертикального блока широкий хват", muscles: "Широчайшие спины, бицепсы", numSets: 4, targetReps: 12, startWeight: 30 },
-      { name: "Тяга вертикального блока узкий хват", muscles: "Широчайшие спины, бицепсы", numSets: 4, targetReps: 12, startWeight: 25 },
-      { name: "Тяга горизонтального блока", muscles: "Середина спины (широчайшие, ромбовидные)", numSets: 4, targetReps: 12, startWeight: 25 },
-      { name: "Тяга штанги в наклоне", muscles: "Широчайшие спины, бицепсы", numSets: 4, targetReps: 12, startWeight: 20 },
-      { name: "Пуловер в кроссовере", muscles: "Широчайшие спины, грудные", numSets: 4, targetReps: 12, startWeight: 15 },
-      { name: "Подъём гантелей стоя", muscles: "Бицепсы", numSets: 4, targetReps: 12, startWeight: 8 },
-      { name: "Сгибание рук в нижнем блоке на бицепс", muscles: "Бицепсы", numSets: 4, targetReps: 12, startWeight: 10 },
+      { name: "Тяга вертикального блока широкий хват", muscles: "Широчайшие спины, бицепсы", numSets: 4, minReps: 8, maxReps: 12, startWeight: 30, weightStep: 5, equipment: "machine" },
+      { name: "Тяга вертикального блока узкий хват", muscles: "Широчайшие спины, бицепсы", numSets: 4, minReps: 8, maxReps: 12, startWeight: 25, weightStep: 5, equipment: "machine" },
+      { name: "Тяга горизонтального блока", muscles: "Середина спины (широчайшие, ромбовидные)", numSets: 4, minReps: 8, maxReps: 12, startWeight: 25, weightStep: 5, equipment: "machine" },
+      { name: "Тяга штанги в наклоне", muscles: "Широчайшие спины, бицепсы", numSets: 4, minReps: 8, maxReps: 12, startWeight: 20, weightStep: 2.5, equipment: "barbell" },
+      { name: "Пуловер в кроссовере", muscles: "Широчайшие спины, грудные", numSets: 4, minReps: 10, maxReps: 15, startWeight: 15, weightStep: 5, equipment: "machine" },
+      { name: "Подъём гантелей стоя", muscles: "Бицепсы", numSets: 4, minReps: 8, maxReps: 12, startWeight: 8, weightStep: 2, equipment: "dumbbell" },
+      { name: "Сгибание рук в нижнем блоке на бицепс", muscles: "Бицепсы", numSets: 4, minReps: 10, maxReps: 15, startWeight: 10, weightStep: 5, equipment: "machine" },
     ],
   },
   {
@@ -66,15 +77,15 @@ const DEFAULT_PROGRAMS: Program[] = [
     subtitle: "Крепость Корней и Удара Копья",
     muscles: "Квадрицепс, ягодичные, бицепс бедра, трицепс",
     exercises: [
-      { name: "Приседания со штангой", muscles: "Квадрицепсы, ягодичные, спина", numSets: 4, targetReps: 12, startWeight: 20 },
-      { name: "Жим ногами в тренажёре", muscles: "Квадрицепсы, ягодичные, бицепс бедра", numSets: 4, targetReps: 12, startWeight: 40 },
-      { name: "Выпады со штангой или гантелями", muscles: "Квадрицепсы, ягодичные, стабилизаторы", numSets: 4, targetReps: 12, startWeight: 10 },
-      { name: "Румынская тяга с упором одной ноги на стену", muscles: "Задняя поверхность бедра, ягодичные", numSets: 4, targetReps: 12, startWeight: 10 },
-      { name: "Отведение ноги назад в кроссовере", muscles: "Ягодичные мышцы", numSets: 4, targetReps: 15, startWeight: 10 },
-      { name: "Отведение ноги в сторону в кроссовере", muscles: "Средние ягодичные мышцы", numSets: 4, targetReps: 15, startWeight: 10 },
-      { name: "Разгибание рук в верхнем блоке", muscles: "Трицепсы", numSets: 4, targetReps: 12, startWeight: 15 },
-      { name: "Французский жим с гантелью стоя", muscles: "Трицепсы", numSets: 4, targetReps: 12, startWeight: 8 },
-      { name: "Обратные отжимания от скамьи", muscles: "Трицепсы", numSets: 4, targetReps: 15, startWeight: 0 },
+      { name: "Приседания со штангой", muscles: "Квадрицепсы, ягодичные, спина", numSets: 4, minReps: 8, maxReps: 12, startWeight: 20, weightStep: 2.5, equipment: "barbell" },
+      { name: "Жим ногами в тренажёре", muscles: "Квадрицепсы, ягодичные, бицепс бедра", numSets: 4, minReps: 10, maxReps: 15, startWeight: 40, weightStep: 10, equipment: "machine" },
+      { name: "Выпады со штангой или гантелями", muscles: "Квадрицепсы, ягодичные, стабилизаторы", numSets: 4, minReps: 8, maxReps: 12, startWeight: 10, weightStep: 2, equipment: "dumbbell" },
+      { name: "Румынская тяга с упором одной ноги на стену", muscles: "Задняя поверхность бедра, ягодичные", numSets: 4, minReps: 10, maxReps: 15, startWeight: 10, weightStep: 2, equipment: "dumbbell" },
+      { name: "Отведение ноги назад в кроссовере", muscles: "Ягодичные мышцы", numSets: 4, minReps: 12, maxReps: 18, startWeight: 10, weightStep: 2.5, equipment: "machine" },
+      { name: "Отведение ноги в сторону в кроссовере", muscles: "Средние ягодичные мышцы", numSets: 4, minReps: 12, maxReps: 18, startWeight: 10, weightStep: 2.5, equipment: "machine" },
+      { name: "Разгибание рук в верхнем блоке", muscles: "Трицепсы", numSets: 4, minReps: 10, maxReps: 15, startWeight: 15, weightStep: 5, equipment: "machine" },
+      { name: "Французский жим с гантелью стоя", muscles: "Трицепсы", numSets: 4, minReps: 8, maxReps: 12, startWeight: 8, weightStep: 2, equipment: "dumbbell" },
+      { name: "Обратные отжимания от скамьи", muscles: "Трицепсы", numSets: 4, minReps: 8, maxReps: 15, startWeight: 0, weightStep: 0, equipment: "bodyweight" },
     ],
   },
 ];
@@ -88,47 +99,81 @@ interface SetHistory {
   difficulty: string;
 }
 
-function roundWeight(w: number): number {
-  return Math.round(w * 2) / 2;
-}
-
 function getSetRecommendation(
-  defaultWeight: number,
-  targetReps: number,
+  progEx: ProgramExercise,
   history: SetHistory[]
 ): { weight: number; reps: number; note: string } {
+  const { startWeight, minReps, maxReps, weightStep, equipment } = progEx;
+
   if (history.length === 0) {
-    return { weight: defaultWeight, reps: targetReps, note: "Начальный вес" };
+    return { weight: startWeight, reps: minReps, note: "" };
   }
 
   const last = history[history.length - 1];
   const daysSinceLast = Math.floor(
     (Date.now() - new Date(last.date).getTime()) / (1000 * 60 * 60 * 24)
   );
+
+  // Перерыв > 10 дней — не повышаем
   if (daysSinceLast > 10) {
-    return { weight: last.weight, reps: last.reps, note: `Перерыв ${daysSinceLast} дн.` };
+    return { weight: last.weight, reps: last.reps, note: `Перерыв ${daysSinceLast} дн. — без повышения` };
   }
 
+  // Проверка серий
   const last3 = history.slice(-3);
   const allHard = last3.length >= 3 && last3.every((h) => h.difficulty === "hard");
-  const allEasy = last3.length >= 3 && last3.every((h) => h.difficulty === "easy");
+  const mediumStreak = last3.length >= 3 && last3.every((h) => h.difficulty === "medium");
 
   if (allHard) {
-    return { weight: roundWeight(last.weight * 0.9), reps: last.reps, note: "Разгрузка -10%" };
-  }
-  if (allEasy) {
-    return { weight: roundWeight(last.weight * 1.075), reps: targetReps, note: "Рост +7.5%" };
+    // 3 раза тяжело — разгрузка на шаг вниз
+    const newWeight = Math.max(0, last.weight - weightStep);
+    return { weight: newWeight, reps: last.reps, note: `Разгрузка: -${weightStep} кг` };
   }
 
   switch (last.difficulty) {
     case "easy": {
-      const w = roundWeight(last.weight * 1.05);
-      return { weight: w, reps: targetReps, note: `+5% → ${w} кг` };
+      if (equipment === "bodyweight") {
+        // Собственный вес — только повторения
+        if (last.reps < maxReps) {
+          return { weight: 0, reps: Math.min(last.reps + 2, maxReps), note: `+2 повт.` };
+        }
+        return { weight: 0, reps: maxReps, note: "Макс повт. — усложняй!" };
+      }
+      if (last.reps < maxReps) {
+        // Ещё не макс повторений — повышаем повторения
+        const newReps = Math.min(last.reps + 2, maxReps);
+        return { weight: last.weight, reps: newReps, note: `+${newReps - last.reps} повт.` };
+      }
+      // Достигнут макс повторений — повышаем вес, сбрасываем повторения
+      const newWeight = last.weight + weightStep;
+      return { weight: newWeight, reps: minReps, note: `+${weightStep} кг → ${newWeight} кг, сброс до ${minReps} повт.` };
     }
-    case "medium":
+
+    case "medium": {
+      if (mediumStreak) {
+        // 3+ раз посильно — пробуем повысить повторения
+        if (last.reps < maxReps) {
+          return { weight: last.weight, reps: last.reps + 1, note: "3× посильно → +1 повт." };
+        }
+      }
       return { weight: last.weight, reps: last.reps, note: "Повторяем" };
-    case "hard":
-      return { weight: last.weight, reps: last.reps, note: "Не повышаем" };
+    }
+
+    case "hard": {
+      if (equipment === "bodyweight") {
+        if (last.reps > minReps) {
+          return { weight: 0, reps: last.reps - 1, note: "-1 повт." };
+        }
+        return { weight: 0, reps: last.reps, note: "Упрости технику" };
+      }
+      // Снижаем вес на шаг
+      const newWeight = Math.max(0, last.weight - weightStep);
+      if (newWeight <= 0 && last.reps > minReps) {
+        return { weight: last.weight, reps: last.reps - 1, note: "-1 повт." };
+      }
+      return { weight: newWeight, reps: last.reps, note: `-${weightStep} кг → ${newWeight} кг` };
+    }
+
     default:
       return { weight: last.weight, reps: last.reps, note: "" };
   }
@@ -198,7 +243,7 @@ export default function ProgramsPage() {
       for (let i = 0; i < ex.numSets; i++) {
         const key = `${ex.name}|${i}`;
         const hist = setHistories.get(key) || [];
-        const rec = getSetRecommendation(ex.startWeight, ex.targetReps, hist);
+        const rec = getSetRecommendation(ex, hist);
         sets.push({ weight: rec.weight, reps: rec.reps, difficulty: "" });
       }
       return { name: ex.name, sets };
@@ -417,7 +462,9 @@ export default function ProgramsPage() {
                 const key = `${exercise.name}|${setIdx}`;
                 const hist = setHistories.get(key) || [];
                 const lastEntry = hist.length > 0 ? hist[hist.length - 1] : null;
-                const rec = getSetRecommendation(10, 12, hist);
+                const progEx = program.exercises.find((pe) => pe.name === exercise.name);
+                const fallbackEx: ProgramExercise = { name: exercise.name, muscles: "", numSets: 4, minReps: 8, maxReps: 12, startWeight: 10, weightStep: 2, equipment: "dumbbell" };
+                const rec = getSetRecommendation(progEx || fallbackEx, hist);
 
                 return (
                   <div key={setIdx} className="mb-2">
@@ -524,14 +571,27 @@ export default function ProgramsPage() {
 
       {/* Progression rules */}
       <div className="card-wood rounded-xl p-4 border border-[#3a3530]/50 mb-8">
-        <h4 className="font-display text-sm text-[#d4bc8e] mb-2">Законы Прогрессии</h4>
-        <div className="space-y-1.5 text-[#d4bc8e] text-xs">
-          <p><span className="text-[#f5f0e6]">Легко (Л)</span> — повышаем вес на 5%</p>
-          <p><span className="text-[#b89a6a]">Средне (С)</span> — повторяем тот же вес</p>
-          <p><span className="text-[#8b2525]">Тяжело (Т)</span> — не повышаем, повторяем</p>
-          <p className="text-[#9b7a4a] mt-2">3 раза подряд тяжело → разгрузка -10%</p>
-          <p className="text-[#9b7a4a]">3 раза подряд легко → ускоренный рост +7.5%</p>
-          <p className="text-[#9b7a4a]">Перерыв больше 10 дней → вес не повышаем</p>
+        <h4 className="font-display text-sm text-[#d4bc8e] mb-3">Ратный Долг: Наказы для Роста Силушки</h4>
+        <div className="space-y-2 text-[#d4bc8e] text-xs">
+          <div>
+            <p className="text-[#f5f0e6] font-semibold mb-0.5">Легко (Л):</p>
+            <p className="text-[#b89a6a]">Повт. &lt; макс. → +1-2 повторения</p>
+            <p className="text-[#b89a6a]">Повт. = макс. → +вес (шаг груза), сброс повт. до мин.</p>
+          </div>
+          <div>
+            <p className="text-[#d4bc8e] font-semibold mb-0.5">Посильно (С):</p>
+            <p className="text-[#b89a6a]">Повторяем тот же вес и повторения</p>
+            <p className="text-[#b89a6a]">3-4× посильно подряд → пробуем +1 повт.</p>
+          </div>
+          <div>
+            <p className="text-[#8b2525] font-semibold mb-0.5">Тяжко (Т):</p>
+            <p className="text-[#b89a6a]">Снижаем вес на шаг груза</p>
+            <p className="text-[#b89a6a]">3× тяжко подряд → разгрузка (ещё -шаг)</p>
+          </div>
+          <div className="border-t border-[#3a3530]/40 pt-2 mt-2">
+            <p className="text-[#9b7a4a]">Шаг груза: гантели +2кг, штанга +2.5-5кг, тренажёр +5кг</p>
+            <p className="text-[#9b7a4a]">Перерыв &gt; 10 дней → вес не повышаем</p>
+          </div>
         </div>
       </div>
 
