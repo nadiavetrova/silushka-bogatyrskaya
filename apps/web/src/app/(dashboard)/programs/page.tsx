@@ -238,8 +238,20 @@ export default function ProgramsPage() {
     return collapsedExercises[key] !== false; // свёрнуто по умолчанию
   };
 
-  // Editable exercises per program (stored in state, initialized from defaults)
-  const [programExercises, setProgramExercises] = useState<Record<string, ExerciseEntry[]>>({});
+  // Editable exercises per program — persisted in sessionStorage so switching tabs doesn't lose data
+  const SESSION_KEY = "silushka_session_exercises";
+  const [programExercises, setProgramExercisesRaw] = useState<Record<string, ExerciseEntry[]>>(() => {
+    if (typeof window === "undefined") return {};
+    try { return JSON.parse(sessionStorage.getItem(SESSION_KEY) || "{}"); }
+    catch { return {}; }
+  });
+  const setProgramExercises = (updater: React.SetStateAction<Record<string, ExerciseEntry[]>>) => {
+    setProgramExercisesRaw((prev) => {
+      const next = typeof updater === "function" ? updater(prev) : updater;
+      try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(next)); } catch {}
+      return next;
+    });
+  };
 
   const { workouts, fetchWorkouts } = useWorkoutStore();
   const userName = useAuthStore((s) => s.user?.name) || "";
