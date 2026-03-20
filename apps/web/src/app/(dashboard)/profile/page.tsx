@@ -141,19 +141,24 @@ export default function ProfilePage() {
       {/* Save button */}
       <motion.button
         whileTap={{ scale: 0.97 }}
-        onClick={handleSave}
-        disabled={saving}
-        className="w-full mt-6 py-3 rounded-xl font-display text-sm bg-[#3a1515] text-[#d4bc8e] border border-[#8b2525]/30 disabled:opacity-50"
-      >
-        {saving ? "Сохраняю..." : saved ? "Сохранено!" : "Сохранить"}
-      </motion.button>
-
-      {/* Save measurement */}
-      <motion.button
-        whileTap={{ scale: 0.97 }}
         onClick={async () => {
-          setSavingMeasurement(true);
+          setSaving(true);
           try {
+            // Сохраняем профиль
+            const data = {
+              name: name || undefined,
+              age: age ? parseInt(age) : null,
+              height: height ? parseFloat(height) : null,
+              bodyWeight: bodyWeight ? parseFloat(bodyWeight) : null,
+              chest: chest ? parseFloat(chest) : null,
+              waist: waist ? parseFloat(waist) : null,
+              hips: hips ? parseFloat(hips) : null,
+              biceps: biceps ? parseFloat(biceps) : null,
+              thigh: thigh ? parseFloat(thigh) : null,
+            };
+            await api.updateProfile(data);
+            if (name) localStorage.setItem("userName", name);
+            // Записываем замер в историю
             const m = await api.createMeasurement({
               bodyWeight: bodyWeight ? parseFloat(bodyWeight) : null,
               chest: chest ? parseFloat(chest) : null,
@@ -163,16 +168,18 @@ export default function ProfilePage() {
               thigh: thigh ? parseFloat(thigh) : null,
             });
             setMeasurements((prev) => [m, ...prev]);
-            setSavingMeasurement(false);
+            setSaved(true);
+            setTimeout(() => setSaved(false), 2000);
           } catch {
-            alert("Ошибка записи замера");
-            setSavingMeasurement(false);
+            alert("Ошибка сохранения");
+          } finally {
+            setSaving(false);
           }
         }}
-        disabled={savingMeasurement}
-        className="w-full mt-3 py-2 rounded-xl text-[10px] text-[#b89a6a] border border-[#3a3530]/50 disabled:opacity-50"
+        disabled={saving}
+        className="w-full mt-6 py-3 rounded-xl font-display text-sm bg-[#3a1515] text-[#d4bc8e] border border-[#8b2525]/30 disabled:opacity-50"
       >
-        {savingMeasurement ? "Записываю..." : "Записать замеры в историю"}
+        {saving ? "Записываю..." : saved ? "Записано!" : "Записать замеры в историю"}
       </motion.button>
 
       {/* Measurement history */}
