@@ -216,6 +216,30 @@ function saveSetHistory(records: SavedSetRecord[]) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
 }
 
+// --- Tip Block ---
+
+function TipBlock({ title, content }: { title: string; content: string[] }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="card-wood rounded-xl border border-[#3a3530]/50 overflow-hidden">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between px-4 py-3 text-left"
+      >
+        <span className="font-display text-xs text-[#d4bc8e]">{title}</span>
+        <svg className="w-3 h-3 text-[#9b7a4a] flex-shrink-0" fill="currentColor" viewBox="0 0 24 24" style={{ transform: open ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.2s" }}><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      {open && (
+        <div className="px-4 pb-3 space-y-1.5">
+          {content.map((line, i) => (
+            <p key={i} className="text-[#b89a6a] text-xs leading-relaxed">• {line}</p>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // --- Component ---
 
 export default function ProgramsPage() {
@@ -666,30 +690,54 @@ export default function ProgramsPage() {
         </button>
       </div>
 
-      {/* Progression rules */}
-      <div className="card-wood rounded-xl p-4 border border-[#3a3530]/50 mb-8">
-        <h4 className="font-display text-sm text-[#d4bc8e] mb-3">Ратный Долг: Наказы для Роста Силушки</h4>
-        <div className="space-y-2 text-[#d4bc8e] text-xs">
-          <div>
-            <p className="text-[#f5f0e6] font-semibold mb-0.5">Легко (Л):</p>
-            <p className="text-[#b89a6a]">Повт. &lt; макс. → +1-2 повторения</p>
-            <p className="text-[#b89a6a]">Повт. = макс. → +вес (шаг груза), сброс повт. до мин.</p>
-          </div>
-          <div>
-            <p className="text-[#d4bc8e] font-semibold mb-0.5">Посильно (С):</p>
-            <p className="text-[#b89a6a]">Повторяем тот же вес и повторения</p>
-            <p className="text-[#b89a6a]">3-4× посильно подряд → пробуем +1 повт.</p>
-          </div>
-          <div>
-            <p className="text-[#8b2525] font-semibold mb-0.5">Тяжко (Т):</p>
-            <p className="text-[#b89a6a]">Снижаем вес на шаг груза</p>
-            <p className="text-[#b89a6a]">3× тяжко подряд → разгрузка (ещё -шаг)</p>
-          </div>
-          <div className="border-t border-[#3a3530]/40 pt-2 mt-2">
-            <p className="text-[#9b7a4a]">Шаг груза: гантели +2кг, штанга +2.5-5кг, тренажёр +5кг</p>
-            <p className="text-[#9b7a4a]">Перерыв &gt; 10 дней → вес не повышаем</p>
-          </div>
-        </div>
+      {/* Tips & Recommendations */}
+      <div className="space-y-2 mb-8">
+        <h4 className="font-display text-sm text-[#d4bc8e] mb-1">Мудрость Берегини</h4>
+
+        {[
+          {
+            title: "Как подобрать начальный вес",
+            content: [
+              "Начни с самого лёгкого веса — даже пустой гриф или гантели по 2-3 кг.",
+              "Сделай 12 повторений. Если совсем легко и можешь ещё 5-6 раз — бери тяжелее.",
+              "Идеальный начальный вес — когда последние 2-3 повторения даются с усилием, но без нарушения техники.",
+              "Не торопись! Лучше начать легче и прибавлять постепенно, чем сразу надорваться.",
+              "Для тренажёров начинай с минимальной плиты и прибавляй по одной.",
+            ],
+          },
+          {
+            title: "Техника и безопасность",
+            content: [
+              "Спина всегда прямая! Особенно в приседаниях, тягах и жимах.",
+              "Не гонись за весом — правильная техника важнее больших цифр.",
+              "Дыши! Выдох на усилие, вдох на возврат.",
+              "Контролируй движение — не бросай вес, опускай медленно (2-3 секунды).",
+              "Если чувствуешь боль (не путай с усталостью мышц) — остановись!",
+              "Пей воду между подходами. Отдых 60-90 секунд для средних весов, 2-3 минуты для тяжёлых.",
+            ],
+          },
+          {
+            title: "Разминка перед тренировкой",
+            content: [
+              "5-10 минут кардио: ходьба, велотренажёр или эллипс. Цель — разогреть тело.",
+              "Суставная разминка: вращения головой, плечами, руками, тазом, коленями, стопами.",
+              "Перед каждым упражнением — 1-2 разминочных подхода с лёгким весом (50% от рабочего).",
+              "Не растягивайся ДО тренировки — статическая растяжка снижает силу. Растяжка — ПОСЛЕ!",
+            ],
+          },
+          {
+            title: "Как понять: Легко, Посильно или Тяжко?",
+            content: [
+              "ЛЕГКО (Л) — сделал все повторения и мог бы ещё 3-4. Вес ощущается комфортно. Следующий раз прибавляем!",
+              "ПОСИЛЬНО (С) — сделал все повторения, но последние 1-2 дались с усилием. Хороший рабочий вес! Повторяем.",
+              "ТЯЖКО (Т) — еле доделал или не смог доделать все повторения. Техника начала ломаться. Следующий раз снижаем вес.",
+              "Шаг груза: гантели +2кг, штанга +2.5-5кг, тренажёр +5кг.",
+              "Перерыв больше 10 дней — вес не повышаем, повторяем предыдущий.",
+            ],
+          },
+        ].map((tip, idx) => (
+          <TipBlock key={idx} title={tip.title} content={tip.content} />
+        ))}
       </div>
 
       {/* Success Modal */}
