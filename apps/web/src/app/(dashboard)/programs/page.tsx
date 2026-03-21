@@ -220,7 +220,7 @@ function saveSetHistory(records: SavedSetRecord[]) {
 
 export default function ProgramsPage() {
   const [selectedProgram, setSelectedProgram] = useState<string>(DEFAULT_PROGRAMS[0].id);
-  const [setHistory, setSetHistory] = useState<SavedSetRecord[]>([]);
+  const [setHistory, setSetHistory] = useState<SavedSetRecord[]>(() => loadSetHistory());
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [newExName, setNewExName] = useState("");
@@ -276,8 +276,9 @@ export default function ProgramsPage() {
 
   // Initialize exercises for current program (from localStorage or defaults)
   useEffect(() => {
-    // Skip if already initialized in this session
-    if (programExercises[selectedProgram]) return;
+    // Skip if already initialized AND user has started filling in (has difficulty set)
+    const existing = programExercises[selectedProgram];
+    if (existing && existing.some((ex) => ex.sets.some((s) => s.difficulty !== ""))) return;
 
     // Check localStorage for custom exercise list
     const customLists = loadCustomExercises();
