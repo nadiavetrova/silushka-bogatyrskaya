@@ -692,7 +692,7 @@ export default function ProgramsPage() {
 
       {/* Tips & Recommendations */}
       <div className="space-y-2 mb-8">
-        <h4 className="font-display text-sm text-[#d4bc8e] mb-1">Мудрость Берегини</h4>
+        <h4 className="font-display text-sm text-[#d4bc8e] mb-1">Правила для Мудростей Берегини</h4>
 
         {[
           {
