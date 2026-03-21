@@ -251,6 +251,21 @@ export default function ProgramsPage() {
   const [showAddEx, setShowAddEx] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [collapsedExercises, setCollapsedExercises] = useState<Record<string, boolean>>({});
+  const [editingProgram, setEditingProgram] = useState<string | null>(null);
+  const [editProgramName, setEditProgramName] = useState("");
+
+  // Custom program names from localStorage
+  const PROG_NAMES_KEY = "silushka_program_names";
+  const [customProgramNames, setCustomProgramNames] = useState<Record<string, string>>(() => {
+    if (typeof window === "undefined") return {};
+    try { return JSON.parse(localStorage.getItem(PROG_NAMES_KEY) || "{}"); } catch { return {}; }
+  });
+  const saveProgramName = (id: string, name: string) => {
+    const updated = { ...customProgramNames, [id]: name };
+    setCustomProgramNames(updated);
+    localStorage.setItem(PROG_NAMES_KEY, JSON.stringify(updated));
+  };
+  const getProgramName = (p: Program) => customProgramNames[p.id] || p.title;
 
   const toggleCollapse = (exIdx: number) => {
     const key = `${selectedProgram}-${exIdx}`;
@@ -478,24 +493,46 @@ export default function ProgramsPage() {
       {/* Program selector */}
       <div className="flex gap-2 overflow-x-auto pb-2 mb-5 scrollbar-hide">
         {DEFAULT_PROGRAMS.map((p) => (
-          <button
-            key={p.id}
-            onClick={() => setSelectedProgram(p.id)}
-            className={`px-3 py-2 rounded-xl text-sm whitespace-nowrap ${
-              selectedProgram === p.id
-                ? "btn-neo-pressed btn-neo text-[#e8dcc8]"
-                : "btn-neo text-[#9b7a4a] hover:text-[#e8dcc8]"
-            }`}
-          >
-            {p.title}
-          </button>
+          <div key={p.id} className="flex items-center gap-1 flex-shrink-0">
+            {editingProgram === p.id ? (
+              <input
+                type="text"
+                value={editProgramName}
+                onChange={(e) => setEditProgramName(e.target.value)}
+                onBlur={() => { if (editProgramName.trim()) saveProgramName(p.id, editProgramName.trim()); setEditingProgram(null); }}
+                onKeyDown={(e) => { if (e.key === "Enter") { if (editProgramName.trim()) saveProgramName(p.id, editProgramName.trim()); setEditingProgram(null); } }}
+                className="bg-[#1a1918] border border-[#8b2525]/50 rounded-xl px-3 py-2 text-sm text-[#e8dcc8] focus:outline-none w-32"
+                autoFocus
+              />
+            ) : (
+              <button
+                onClick={() => setSelectedProgram(p.id)}
+                className={`px-3 py-2 rounded-xl text-sm whitespace-nowrap ${
+                  selectedProgram === p.id
+                    ? "btn-neo-pressed btn-neo text-[#e8dcc8]"
+                    : "btn-neo text-[#9b7a4a] hover:text-[#e8dcc8]"
+                }`}
+              >
+                {getProgramName(p)}
+              </button>
+            )}
+            {selectedProgram === p.id && editingProgram !== p.id && (
+              <button
+                onClick={(e) => { e.stopPropagation(); setEditProgramName(getProgramName(p)); setEditingProgram(p.id); }}
+                className="text-[#9b7a4a] hover:text-[#d4bc8e] text-xs opacity-50 hover:opacity-100"
+                title="Переименовать"
+              >
+                ✎
+              </button>
+            )}
+          </div>
         ))}
       </div>
 
       {/* Program info */}
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="font-display text-lg text-[#d4bc8e]">{program.title}</h3>
+          <h3 className="font-display text-lg text-[#d4bc8e]">{getProgramName(program)}</h3>
           <p className="text-[#9b7a4a] text-xs mt-0.5">{program.subtitle} — {program.muscles}</p>
         </div>
       </div>
