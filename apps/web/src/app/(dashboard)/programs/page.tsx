@@ -472,9 +472,9 @@ export default function ProgramsPage() {
   };
 
   const diffColors: Record<string, string> = {
-    easy: "btn-neo-pressed btn-neo-sm text-[#5ea352]",
-    medium: "btn-neo-pressed btn-neo-sm text-[#d4bc8e]",
-    hard: "btn-neo-pressed btn-neo-sm text-[#c54545]",
+    easy: "btn-neo-pressed btn-neo-sm text-[#5ea352] bg-[#3a6b32]/25",
+    medium: "btn-neo-pressed btn-neo-sm text-[#d4bc8e] bg-[#7a5c35]/25",
+    hard: "btn-neo-pressed btn-neo-sm text-[#c54545] bg-[#8b2525]/25",
     "": "btn-neo-sm text-[#9b7a4a]",
   };
 
