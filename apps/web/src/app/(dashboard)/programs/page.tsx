@@ -699,11 +699,17 @@ export default function ProgramsPage() {
         )}
         <button
           onClick={() => {
-            if (confirm("Восстановить дефолтные упражнения для этой программы?")) {
+            if (confirm("Восстановить дефолтные упражнения и название программы?")) {
+              // Восстановить упражнения
               const customLists = loadCustomExercises();
               delete customLists[selectedProgram];
               saveCustomExercises(customLists);
               setProgramExercises((prev) => { const n = { ...prev }; delete n[selectedProgram]; return n; });
+              // Восстановить название программы
+              const updatedNames = { ...customProgramNames };
+              delete updatedNames[selectedProgram];
+              setCustomProgramNames(updatedNames);
+              localStorage.setItem(PROG_NAMES_KEY, JSON.stringify(updatedNames));
             }
           }}
           className="w-full mt-2 py-1.5 rounded-xl text-xs text-[#9b7a4a] hover:text-[#d4bc8e] opacity-50 hover:opacity-100 transition-opacity"
