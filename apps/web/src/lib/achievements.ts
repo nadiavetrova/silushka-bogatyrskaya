@@ -189,7 +189,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: "centurion",
     name: "Сотня подвигов",
     description: "Провести 100 тренировок",
-    icon: "👑",
+    icon: "IMG:lion",
     check: (_, s) => ({
       earned: s.totalWorkouts >= 100,
       progress: { current: Math.min(s.totalWorkouts, 100), target: 100 },
