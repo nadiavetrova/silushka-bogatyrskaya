@@ -34,13 +34,11 @@ export default function AchievementsPage() {
   const [calMonth, setCalMonth] = useState(() => new Date().getMonth());
   const [calYear, setCalYear] = useState(() => new Date().getFullYear());
 
+  const seenRef = useRef(false);
+
   useEffect(() => {
     fetchWorkouts();
   }, [fetchWorkouts]);
-
-  if (loading && workouts.length === 0) {
-    return <div className="text-center py-16 text-[#b89a6a]">Загрузка...</div>;
-  }
 
   const levelData = computeLevel(workouts.length);
   const achievements = computeAchievements(workouts);
@@ -50,7 +48,6 @@ export default function AchievementsPage() {
   const levelIsNew = isLevelNew(levelData.level.name);
 
   // Запоминаем какие достижения были новыми ДО markAllAsSeen (только один раз)
-  const seenRef = useRef(false);
   const newAchievementIds = useMemo(() => {
     if (seenRef.current || loading) return new Set<string>();
     seenRef.current = true;
@@ -64,6 +61,10 @@ export default function AchievementsPage() {
       return () => clearTimeout(timer);
     }
   }, [loading, workouts]);
+
+  if (loading && workouts.length === 0) {
+    return <div className="text-center py-16 text-[#b89a6a]">Загрузка...</div>;
+  }
 
   // Calendar
   const workoutDates = getWorkoutDatesSet(workouts);
