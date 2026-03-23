@@ -149,7 +149,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: "bogatyr-streak",
     name: "Богатырская серия",
     description: "5 тренировок подряд без перерыва",
-    icon: "🔗",
+    icon: "IMG:cep",
     check: (_, s) => ({
       earned: s.maxStreak >= 5,
       progress: { current: Math.min(s.maxStreak, 5), target: 5 },
