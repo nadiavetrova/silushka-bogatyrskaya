@@ -18,6 +18,7 @@ export default function ProfilePage() {
   const [deleting, setDeleting] = useState(false);
   const [measurements, setMeasurements] = useState<MeasurementData[]>([]);
   const [savingMeasurement, setSavingMeasurement] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   // Form fields
   const [name, setName] = useState("");
@@ -47,30 +48,6 @@ export default function ProfilePage() {
     api.getMeasurements().then(setMeasurements).catch(() => {});
   }, []);
 
-  const handleSave = async () => {
-    setSaving(true);
-    try {
-      const data = {
-        name: name || undefined,
-        age: age ? parseInt(age) : null,
-        height: height ? parseFloat(height) : null,
-        bodyWeight: bodyWeight ? parseFloat(bodyWeight) : null,
-        chest: chest ? parseFloat(chest) : null,
-        waist: waist ? parseFloat(waist) : null,
-        hips: hips ? parseFloat(hips) : null,
-        biceps: biceps ? parseFloat(biceps) : null,
-        thigh: thigh ? parseFloat(thigh) : null,
-      };
-      await api.updateProfile(data);
-      if (name) localStorage.setItem("userName", name);
-      setSaved(true);
-      setTimeout(() => setSaved(false), 2000);
-    } catch {
-      alert("Ошибка сохранения");
-    } finally {
-      setSaving(false);
-    }
-  };
 
   const handleDelete = async () => {
     setDeleting(true);
@@ -87,14 +64,14 @@ export default function ProfilePage() {
   };
 
   const fields = [
-    { label: "Возраст", value: age, set: setAge, type: "numeric", placeholder: "Лет" },
-    { label: "Рост (см)", value: height, set: setHeight, type: "numeric", placeholder: "см" },
-    { label: "Вес (кг)", value: bodyWeight, set: setBodyWeight, type: "numeric", placeholder: "кг" },
-    { label: "Обхват груди (см)", value: chest, set: setChest, type: "numeric", placeholder: "см" },
-    { label: "Обхват талии (см)", value: waist, set: setWaist, type: "numeric", placeholder: "см" },
-    { label: "Обхват бёдер (см)", value: hips, set: setHips, type: "numeric", placeholder: "см" },
-    { label: "Обхват бицепса (см)", value: biceps, set: setBiceps, type: "numeric", placeholder: "см" },
-    { label: "Обхват бедра (см)", value: thigh, set: setThigh, type: "numeric", placeholder: "см" },
+    { label: "Возраст", value: age, set: setAge, type: "numeric", placeholder: "Лет", max: 120 },
+    { label: "Рост (см)", value: height, set: setHeight, type: "numeric", placeholder: "см", max: 300 },
+    { label: "Вес (кг)", value: bodyWeight, set: setBodyWeight, type: "numeric", placeholder: "кг", max: 500 },
+    { label: "Обхват груди (см)", value: chest, set: setChest, type: "numeric", placeholder: "см", max: 300 },
+    { label: "Обхват талии (см)", value: waist, set: setWaist, type: "numeric", placeholder: "см", max: 300 },
+    { label: "Обхват бёдер (см)", value: hips, set: setHips, type: "numeric", placeholder: "см", max: 300 },
+    { label: "Обхват бицепса (см)", value: biceps, set: setBiceps, type: "numeric", placeholder: "см", max: 100 },
+    { label: "Обхват бедра (см)", value: thigh, set: setThigh, type: "numeric", placeholder: "см", max: 200 },
   ];
 
   if (loading) {
@@ -128,21 +105,54 @@ export default function ProfilePage() {
             <label className="text-[#9b7a4a] text-[10px] block mb-1">{f.label}</label>
             <input
               type="text"
-              inputMode={f.type === "numeric" ? "numeric" : "text"}
+              inputMode={f.type === "numeric" ? "decimal" : "text"}
               value={f.value}
-              onChange={(e) => f.set(e.target.value)}
+              onChange={(e) => {
+                const v = e.target.value;
+                if (v === "" || /^\d{0,3}\.?\d{0,1}$/.test(v)) {
+                  f.set(v);
+                  setErrorMsg("");
+                }
+              }}
               placeholder={f.placeholder}
-              className="w-full bg-[#1a1918]/95 border border-[#3a3530]/50 rounded-xl px-3 py-2.5 text-[#e8dcc8] text-sm focus:border-[#8b2525]/50 focus:outline-none placeholder-[#7a5c35]/50"
+              className={`w-full bg-[#1a1918]/95 border rounded-xl px-3 py-2.5 text-[#e8dcc8] text-sm focus:outline-none placeholder-[#7a5c35]/50 ${
+                f.value && parseFloat(f.value) > f.max ? "border-[#c54545]/70 focus:border-[#c54545]" : "border-[#3a3530]/50 focus:border-[#8b2525]/50"
+              }`}
             />
+            {f.value && parseFloat(f.value) > f.max && (
+              <p className="text-[#c54545] text-[9px] mt-0.5">Максимум: {f.max}</p>
+            )}
           </div>
         ))}
       </div>
+
+      {/* Error message */}
+      {errorMsg && (
+        <p className="text-[#c54545] text-xs text-center mt-3">{errorMsg}</p>
+      )}
 
       {/* Save button */}
       <motion.button
         whileTap={{ scale: 0.97 }}
         onClick={async () => {
+          // Проверяем лимиты перед отправкой
+          const limits = [
+            { label: "Возраст", val: age, max: 120 },
+            { label: "Рост", val: height, max: 300 },
+            { label: "Вес", val: bodyWeight, max: 500 },
+            { label: "Обхват груди", val: chest, max: 300 },
+            { label: "Обхват талии", val: waist, max: 300 },
+            { label: "Обхват бёдер", val: hips, max: 300 },
+            { label: "Обхват бицепса", val: biceps, max: 100 },
+            { label: "Обхват бедра", val: thigh, max: 200 },
+          ];
+          const invalid = limits.find((l) => l.val && parseFloat(l.val) > l.max);
+          if (invalid) {
+            setErrorMsg(`${invalid.label}: максимум ${invalid.max}`);
+            return;
+          }
           setSaving(true);
+          setErrorMsg("");
           try {
             // Сохраняем профиль
             const data = {
@@ -171,7 +181,7 @@ export default function ProfilePage() {
             setSaved(true);
             setTimeout(() => setSaved(false), 2000);
           } catch {
-            alert("Ошибка сохранения");
+            setErrorMsg("Ошибка сохранения. Проверьте значения.");
           } finally {
             setSaving(false);
           }
