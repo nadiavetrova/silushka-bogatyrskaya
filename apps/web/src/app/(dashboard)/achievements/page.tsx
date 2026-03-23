@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { motion } from "framer-motion";
 import { useWorkoutStore } from "@/stores/workout";
 import {
@@ -42,10 +42,13 @@ export default function AchievementsPage() {
   const earnedCount = achievements.filter((a) => a.earned).length;
   const levelIsNew = isLevelNew(levelData.level.name);
 
-  // Запоминаем какие достижения были новыми ДО markAllAsSeen
-  const [newAchievementIds] = useState(() => {
+  // Запоминаем какие достижения были новыми ДО markAllAsSeen (только один раз)
+  const seenRef = useRef(false);
+  const newAchievementIds = useMemo(() => {
+    if (seenRef.current || loading) return new Set<string>();
+    seenRef.current = true;
     return new Set(achievements.filter((a) => a.earned && isAchievementNew(a.id)).map((a) => a.id));
-  });
+  }, [achievements, loading]);
 
   // Отмечаем все как просмотренные после рендера
   useEffect(() => {
