@@ -129,7 +129,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: "week-training",
     name: "Неделя закалки",
     description: "Провести 7 тренировок",
-    icon: "🔥",
+    icon: "IMG:fire",
     check: (w, s) => ({
       earned: s.totalWorkouts >= 7,
       progress: { current: Math.min(s.totalWorkouts, 7), target: 7 },
