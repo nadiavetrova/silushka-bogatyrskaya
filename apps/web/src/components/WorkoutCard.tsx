@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import type { WorkoutData } from "../lib/types";
 import { api } from "@/lib/api";
+import { ShareCard } from "./ShareCard";
 
 const difficultyLabels: Record<string, string> = {
   easy: "легко",
@@ -52,6 +53,7 @@ export function WorkoutCard({ workout, onDelete }: Props) {
   const [expanded, setExpanded] = useState(false);
   const [showActions, setShowActions] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [showShare, setShowShare] = useState(false);
 
   const date = new Date(workout.date).toLocaleDateString("ru-RU", {
     weekday: "short",
@@ -120,6 +122,12 @@ export function WorkoutCard({ workout, onDelete }: Props) {
             Открыть
           </button>
           <button
+            onClick={(e) => { e.stopPropagation(); setShowShare(true); }}
+            className="flex-1 py-1.5 text-xs bg-[#7a5c35]/20 text-[#d4bc8e] rounded-lg border border-[#7a5c35]/30 hover:bg-[#7a5c35]/30"
+          >
+            Поделиться
+          </button>
+          <button
             onClick={handleDelete}
             disabled={deleting}
             className="flex-1 py-1.5 text-xs bg-[#8b2525]/20 text-[#c54545] rounded-lg border border-[#8b2525]/30 hover:bg-[#8b2525]/30 disabled:opacity-50"
@@ -142,6 +150,8 @@ export function WorkoutCard({ workout, onDelete }: Props) {
           ))}
         </div>
       )}
+      {/* Share modal */}
+      {showShare && <ShareCard workout={workout} onClose={() => setShowShare(false)} />}
     </motion.div>
   );
 }

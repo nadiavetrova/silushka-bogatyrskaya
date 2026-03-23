@@ -22,6 +22,11 @@ const navItems = [
     label: "Ведомость\nСилушки",
     icon: <img src="/images/sver.png" alt="Ведомость Силушки" className="w-8 h-8 object-contain" />,
   },
+  {
+    href: "/achievements",
+    label: "Палата\nСлавы",
+    icon: <img src="/images/chernomor.png" alt="Палата Славы" className="w-8 h-8 object-contain" />,
+  },
 ];
 
 export default function DashboardLayout({
