@@ -1,10 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AuthGuard } from "@/components/AuthGuard";
 import { useAuthStore } from "@/stores/auth";
+import { useWorkoutStore } from "@/stores/workout";
+import { getNewAchievementsCount } from "@/lib/achievements";
 
 const navItems = [
   {
@@ -37,6 +39,18 @@ export default function DashboardLayout({
   const pathname = usePathname();
   const logout = useAuthStore((s) => s.logout);
   const user = useAuthStore((s) => s.user);
+  const { workouts, fetchWorkouts } = useWorkoutStore();
+  const [newCount, setNewCount] = useState(0);
+
+  useEffect(() => {
+    fetchWorkouts();
+  }, [fetchWorkouts]);
+
+  useEffect(() => {
+    if (workouts.length > 0 || workouts.length === 0) {
+      setNewCount(getNewAchievementsCount(workouts));
+    }
+  }, [workouts]);
 
   return (
     <AuthGuard>
@@ -103,7 +117,14 @@ export default function DashboardLayout({
                       : "text-[#9b7a4a] hover:text-[#d4bc8e]"
                   }`}
                 >
-                  {item.icon}
+                  <div className="relative">
+                    {item.icon}
+                    {item.href === "/achievements" && newCount > 0 && !pathname.startsWith("/achievements") && (
+                      <span className="absolute -top-1 -right-1 bg-[#c54545] text-white text-[8px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-[#1a1208]">
+                        {newCount}
+                      </span>
+                    )}
+                  </div>
                   <span className="text-[9px] font-medium text-center leading-tight whitespace-pre-line">{item.label}</span>
                 </Link>
               );

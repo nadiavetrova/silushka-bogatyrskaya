@@ -10,6 +10,9 @@ import {
   computeMaxStreak,
   getWorkoutDatesSet,
   getCalendarDays,
+  markAllAsSeen,
+  isAchievementNew,
+  isLevelNew,
   LEVELS,
 } from "@/lib/achievements";
 
@@ -37,6 +40,20 @@ export default function AchievementsPage() {
   const totalTonnage = computeTotalTonnage(workouts);
   const maxStreak = computeMaxStreak(workouts);
   const earnedCount = achievements.filter((a) => a.earned).length;
+  const levelIsNew = isLevelNew(levelData.level.name);
+
+  // Запоминаем какие достижения были новыми ДО markAllAsSeen
+  const [newAchievementIds] = useState(() => {
+    return new Set(achievements.filter((a) => a.earned && isAchievementNew(a.id)).map((a) => a.id));
+  });
+
+  // Отмечаем все как просмотренные после рендера
+  useEffect(() => {
+    if (!loading) {
+      const timer = setTimeout(() => markAllAsSeen(workouts), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [loading, workouts]);
 
   // Calendar
   const workoutDates = getWorkoutDatesSet(workouts);
@@ -75,9 +92,16 @@ export default function AchievementsPage() {
         <div className="flex items-center justify-between mb-3">
           <div>
             <p className="text-[#9b7a4a] text-[10px]">Уровень Богатыря</p>
-            <p className="text-[#d4bc8e] font-display text-xl">
-              {levelData.level.icon} {levelData.level.name}
-            </p>
+            <div className="flex items-center gap-2">
+              <p className="text-[#d4bc8e] font-display text-xl">
+                {levelData.level.icon} {levelData.level.name}
+              </p>
+              {levelIsNew && (
+                <span className="text-[8px] font-bold bg-[#c54545] text-white px-2 py-0.5 rounded-full animate-pulse">
+                  НОВЫЙ УРОВЕНЬ!
+                </span>
+              )}
+            </div>
           </div>
           <div className="text-right">
             <p className="text-[#d4bc8e] text-2xl font-bold">{workouts.length}</p>
@@ -222,9 +246,16 @@ export default function AchievementsPage() {
             <div className="flex items-start gap-2">
               <span className={`text-2xl ${a.earned ? "" : "grayscale opacity-50"}`}>{a.icon}</span>
               <div className="flex-1 min-w-0">
-                <p className={`text-xs font-bold ${a.earned ? "text-[#d4bc8e]" : "text-[#9b7a4a]"}`}>
-                  {a.name}
-                </p>
+                <div className="flex items-center gap-1.5">
+                  <p className={`text-xs font-bold ${a.earned ? "text-[#d4bc8e]" : "text-[#9b7a4a]"}`}>
+                    {a.name}
+                  </p>
+                  {a.earned && newAchievementIds.has(a.id) && (
+                    <span className="text-[7px] font-bold bg-[#c54545] text-white px-1.5 py-0.5 rounded-full animate-pulse">
+                      НОВОЕ
+                    </span>
+                  )}
+                </div>
                 <p className="text-[#9b7a4a] text-[9px] mt-0.5">{a.description}</p>
               </div>
             </div>

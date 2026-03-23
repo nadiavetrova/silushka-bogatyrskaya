@@ -223,6 +223,55 @@ export function computeAchievements(workouts: WorkoutData[]): Achievement[] {
   });
 }
 
+// ==================== УВЕДОМЛЕНИЯ ====================
+
+const SEEN_ACHIEVEMENTS_KEY = "silushka_seen_achievements";
+const SEEN_LEVEL_KEY = "silushka_seen_level";
+
+function getSeenAchievements(): Set<string> {
+  if (typeof window === "undefined") return new Set();
+  try {
+    return new Set(JSON.parse(localStorage.getItem(SEEN_ACHIEVEMENTS_KEY) || "[]"));
+  } catch { return new Set(); }
+}
+
+function getSeenLevel(): string {
+  if (typeof window === "undefined") return "";
+  return localStorage.getItem(SEEN_LEVEL_KEY) || "";
+}
+
+export function getNewAchievementsCount(workouts: WorkoutData[]): number {
+  const achievements = computeAchievements(workouts);
+  const seen = getSeenAchievements();
+  const earnedIds = achievements.filter((a) => a.earned).map((a) => a.id);
+  const newAchievements = earnedIds.filter((id) => !seen.has(id)).length;
+
+  const levelData = computeLevel(workouts.length);
+  const seenLevel = getSeenLevel();
+  const newLevel = levelData.level.name !== seenLevel && seenLevel !== "" ? 1 : 0;
+
+  return newAchievements + newLevel;
+}
+
+export function markAllAsSeen(workouts: WorkoutData[]): void {
+  const achievements = computeAchievements(workouts);
+  const earnedIds = achievements.filter((a) => a.earned).map((a) => a.id);
+  localStorage.setItem(SEEN_ACHIEVEMENTS_KEY, JSON.stringify(earnedIds));
+
+  const levelData = computeLevel(workouts.length);
+  localStorage.setItem(SEEN_LEVEL_KEY, levelData.level.name);
+}
+
+export function isAchievementNew(id: string): boolean {
+  const seen = getSeenAchievements();
+  return !seen.has(id);
+}
+
+export function isLevelNew(levelName: string): boolean {
+  const seenLevel = getSeenLevel();
+  return seenLevel !== "" && seenLevel !== levelName;
+}
+
 // ==================== КАЛЕНДАРЬ ====================
 
 export function getWorkoutDatesSet(workouts: WorkoutData[]): Set<string> {
