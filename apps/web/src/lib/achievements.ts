@@ -139,7 +139,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: "month-strength",
     name: "Месяц силы",
     description: "Провести 30 тренировок",
-    icon: "💎",
+    icon: "IMG:almaz",
     check: (_, s) => ({
       earned: s.totalWorkouts >= 30,
       progress: { current: Math.min(s.totalWorkouts, 30), target: 30 },
