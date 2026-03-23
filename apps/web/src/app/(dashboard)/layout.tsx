@@ -25,7 +25,7 @@ const navItems = [
   {
     href: "/achievements",
     label: "Палата\nСлавы",
-    icon: <img src="/images/chernomor.png" alt="Палата Славы" className="w-8 h-8 object-contain" />,
+    icon: <img src="/images/wolf.png" alt="Палата Славы" className="w-8 h-8 object-contain" />,
   },
 ];
 
