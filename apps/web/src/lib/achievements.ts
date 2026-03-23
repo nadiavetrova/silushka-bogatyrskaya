@@ -118,7 +118,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: "first-workout",
     name: "Первый подвиг",
     description: "Завершить первую тренировку",
-    icon: "⭐",
+    icon: "IMG:star",
     check: (w, s) => ({
       earned: s.totalWorkouts >= 1,
       earnedDate: w.length > 0 ? w[w.length - 1].date : undefined,

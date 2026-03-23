@@ -244,7 +244,11 @@ export default function AchievementsPage() {
             }`}
           >
             <div className="flex items-start gap-2">
-              <span className={`text-2xl ${a.earned ? "" : "grayscale opacity-50"}`}>{a.icon}</span>
+              {a.icon.startsWith("IMG:") ? (
+                <img src={`/images/${a.icon.replace("IMG:", "")}.png`} alt={a.name} className={`w-8 h-8 object-contain ${a.earned ? "" : "grayscale opacity-50"}`} />
+              ) : (
+                <span className={`text-2xl ${a.earned ? "" : "grayscale opacity-50"}`}>{a.icon}</span>
+              )}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
                   <p className={`text-xs font-bold ${a.earned ? "text-[#d4bc8e]" : "text-[#9b7a4a]"}`}>
