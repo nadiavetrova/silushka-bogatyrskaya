@@ -169,7 +169,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: "tonnage-10000",
     name: "Стальной богатырь",
     description: "Поднять суммарно 10 000 кг",
-    icon: "🗡️",
+    icon: "IMG:mechIcon",
     check: (_, s) => ({
       earned: s.totalTonnage >= 10000,
       progress: { current: Math.min(s.totalTonnage, 10000), target: 10000 },
