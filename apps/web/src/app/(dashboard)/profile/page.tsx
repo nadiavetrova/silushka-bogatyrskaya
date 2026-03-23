@@ -64,14 +64,14 @@ export default function ProfilePage() {
   };
 
   const fields = [
-    { label: "Возраст", value: age, set: setAge, type: "numeric", placeholder: "Лет", max: 120 },
-    { label: "Рост (см)", value: height, set: setHeight, type: "numeric", placeholder: "см", max: 300 },
-    { label: "Вес (кг)", value: bodyWeight, set: setBodyWeight, type: "numeric", placeholder: "кг", max: 500 },
-    { label: "Обхват груди (см)", value: chest, set: setChest, type: "numeric", placeholder: "см", max: 300 },
-    { label: "Обхват талии (см)", value: waist, set: setWaist, type: "numeric", placeholder: "см", max: 300 },
-    { label: "Обхват бёдер (см)", value: hips, set: setHips, type: "numeric", placeholder: "см", max: 300 },
-    { label: "Обхват бицепса (см)", value: biceps, set: setBiceps, type: "numeric", placeholder: "см", max: 100 },
-    { label: "Обхват бедра (см)", value: thigh, set: setThigh, type: "numeric", placeholder: "см", max: 200 },
+    { label: "Возраст", value: age, set: setAge, type: "numeric", placeholder: "Лет" },
+    { label: "Рост (см)", value: height, set: setHeight, type: "numeric", placeholder: "см" },
+    { label: "Вес (кг)", value: bodyWeight, set: setBodyWeight, type: "numeric", placeholder: "кг" },
+    { label: "Обхват груди (см)", value: chest, set: setChest, type: "numeric", placeholder: "см" },
+    { label: "Обхват талии (см)", value: waist, set: setWaist, type: "numeric", placeholder: "см" },
+    { label: "Обхват бёдер (см)", value: hips, set: setHips, type: "numeric", placeholder: "см" },
+    { label: "Обхват бицепса (см)", value: biceps, set: setBiceps, type: "numeric", placeholder: "см" },
+    { label: "Обхват бедра (см)", value: thigh, set: setThigh, type: "numeric", placeholder: "см" },
   ];
 
   if (loading) {
@@ -108,20 +108,15 @@ export default function ProfilePage() {
               inputMode={f.type === "numeric" ? "decimal" : "text"}
               value={f.value}
               onChange={(e) => {
-                const v = e.target.value;
-                if (v === "" || /^\d{0,3}\.?\d{0,1}$/.test(v)) {
+                const v = e.target.value.replace(",", ".");
+                if (v === "" || /^\d*\.?\d*$/.test(v)) {
                   f.set(v);
                   setErrorMsg("");
                 }
               }}
               placeholder={f.placeholder}
-              className={`w-full bg-[#1a1918]/95 border rounded-xl px-3 py-2.5 text-[#e8dcc8] text-sm focus:outline-none placeholder-[#7a5c35]/50 ${
-                f.value && parseFloat(f.value) > f.max ? "border-[#c54545]/70 focus:border-[#c54545]" : "border-[#3a3530]/50 focus:border-[#8b2525]/50"
-              }`}
+              className="w-full bg-[#1a1918]/95 border border-[#3a3530]/50 focus:border-[#8b2525]/50 rounded-xl px-3 py-2.5 text-[#e8dcc8] text-sm focus:outline-none placeholder-[#7a5c35]/50"
             />
-            {f.value && parseFloat(f.value) > f.max && (
-              <p className="text-[#c54545] text-[9px] mt-0.5">Максимум: {f.max}</p>
-            )}
           </div>
         ))}
       </div>
@@ -135,22 +130,6 @@ export default function ProfilePage() {
       <motion.button
         whileTap={{ scale: 0.97 }}
         onClick={async () => {
-          // Проверяем лимиты перед отправкой
-          const limits = [
-            { label: "Возраст", val: age, max: 120 },
-            { label: "Рост", val: height, max: 300 },
-            { label: "Вес", val: bodyWeight, max: 500 },
-            { label: "Обхват груди", val: chest, max: 300 },
-            { label: "Обхват талии", val: waist, max: 300 },
-            { label: "Обхват бёдер", val: hips, max: 300 },
-            { label: "Обхват бицепса", val: biceps, max: 100 },
-            { label: "Обхват бедра", val: thigh, max: 200 },
-          ];
-          const invalid = limits.find((l) => l.val && parseFloat(l.val) > l.max);
-          if (invalid) {
-            setErrorMsg(`${invalid.label}: максимум ${invalid.max}`);
-            return;
-          }
           setSaving(true);
           setErrorMsg("");
           try {

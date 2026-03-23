@@ -84,7 +84,7 @@ export default function WelcomePage() {
   };
 
   const title = currentSlide.useNameInTitle
-    ? `${currentSlide.title}, ${userName}!`
+    ? `${currentSlide.title} ${userName}!`
     : currentSlide.title;
 
   return (

@@ -269,7 +269,7 @@ export default function ProgramsPage() {
 
   const toggleCollapse = (exIdx: number) => {
     const key = `${selectedProgram}-${exIdx}`;
-    setCollapsedExercises((prev) => ({ ...prev, [key]: !prev[key] }));
+    setCollapsedExercises((prev) => ({ ...prev, [key]: prev[key] === false ? true : false }));
   };
 
   const isCollapsed = (exIdx: number) => {
@@ -472,10 +472,10 @@ export default function ProgramsPage() {
   };
 
   const diffColors: Record<string, string> = {
-    easy: "btn-neo-pressed btn-neo-sm text-[#5ea352] bg-[#3a6b32]/25",
-    medium: "btn-neo-pressed btn-neo-sm text-[#d4bc8e] bg-[#7a5c35]/25",
-    hard: "btn-neo-pressed btn-neo-sm text-[#c54545] bg-[#8b2525]/25",
-    "": "btn-neo-sm text-[#9b7a4a]",
+    easy: "btn-neo-pressed btn-neo-sm text-[#5ea352] bg-[#3a6b32]/50 border-[#5ea352]/50",
+    medium: "btn-neo-pressed btn-neo-sm text-[#d4bc8e] bg-[#7a5c35]/50 border-[#d4bc8e]/50",
+    hard: "btn-neo-pressed btn-neo-sm text-[#c54545] bg-[#8b2525]/50 border-[#c54545]/50",
+    "": "btn-neo-sm text-[#9b7a4a] border-[#3a3530]/50",
   };
 
   return (
@@ -627,12 +627,12 @@ export default function ProgramsPage() {
                               placeholder="0"
                               className="bg-[#1a1918]/95 border border-[#3a3530]/50 rounded-lg px-2 py-1.5 text-[#e8dcc8] text-sm w-full focus:border-[#8b2525]/50 focus:outline-none"
                             />
-                            <div className="flex gap-1">
+                            <div className="flex gap-1.5">
                               {(["easy", "medium", "hard"] as const).map((d) => (
                                 <button
                                   key={d}
                                   onClick={() => updateSet(exIdx, setIdx, "difficulty", set.difficulty === d ? "" : d)}
-                                  className={`px-1.5 py-1 rounded text-[10px] border transition-all ${
+                                  className={`w-9 h-9 rounded-lg text-xs font-bold border transition-all ${
                                     set.difficulty === d ? diffColors[d] : diffColors[""]
                                   }`}
                                 >

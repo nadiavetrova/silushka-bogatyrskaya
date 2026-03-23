@@ -8,14 +8,14 @@ router.use(authMiddleware);
 
 const profileSchema = z.object({
   name: z.string().optional(),
-  age: z.number().int().min(10).max(120).nullable().optional(),
-  height: z.number().min(50).max(300).nullable().optional(),
-  bodyWeight: z.number().min(20).max(500).nullable().optional(),
-  chest: z.number().min(0).max(300).nullable().optional(),
-  waist: z.number().min(0).max(300).nullable().optional(),
-  hips: z.number().min(0).max(300).nullable().optional(),
-  biceps: z.number().min(0).max(100).nullable().optional(),
-  thigh: z.number().min(0).max(200).nullable().optional(),
+  age: z.number().int().min(0).nullable().optional(),
+  height: z.number().min(0).nullable().optional(),
+  bodyWeight: z.number().min(0).nullable().optional(),
+  chest: z.number().min(0).nullable().optional(),
+  waist: z.number().min(0).nullable().optional(),
+  hips: z.number().min(0).nullable().optional(),
+  biceps: z.number().min(0).nullable().optional(),
+  thigh: z.number().min(0).nullable().optional(),
 });
 
 // GET /profile
