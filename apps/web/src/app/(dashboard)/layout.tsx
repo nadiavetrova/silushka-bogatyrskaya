@@ -113,18 +113,20 @@ export default function DashboardLayout({
               <div className="flex gap-3">
                 <button
                   onClick={async () => {
-                    if (navigator.share) {
-                      try {
-                        await navigator.share({
-                          title: "Силушка Богатырская",
-                          text: "Тренируйся по-богатырски! Попробуй Силушку Богатырскую",
-                          url: "https://silushka-bogatyrskaya.com",
-                        });
-                      } catch {}
-                    } else {
-                      await navigator.clipboard.writeText("https://silushka-bogatyrskaya.com");
-                      alert("Ссылка скопирована!");
-                    }
+                    try {
+                      const response = await fetch("/images/qr.png");
+                      const blob = await response.blob();
+                      const file = new File([blob], "silushka-qr.png", { type: "image/png" });
+                      const shareData = { files: [file], title: "Силушка Богатырская", text: "Тренируйся по-богатырски! Попробуй Силушку Богатырскую\nhttps://silushka-bogatyrskaya.com" };
+                      if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+                        await navigator.share(shareData);
+                      } else if (navigator.share) {
+                        await navigator.share({ title: "Силушка Богатырская", text: "Тренируйся по-богатырски! Попробуй Силушку Богатырскую", url: "https://silushka-bogatyrskaya.com" });
+                      } else {
+                        await navigator.clipboard.writeText("https://silushka-bogatyrskaya.com");
+                        alert("Ссылка скопирована!");
+                      }
+                    } catch {}
                   }}
                   className="flex-1 py-3 rounded-xl bg-[#8b2525] text-[#e8dcc8] font-display text-sm hover:bg-[#a83232] transition-colors"
                 >
