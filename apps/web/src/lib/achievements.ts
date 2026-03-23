@@ -179,7 +179,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: "variety-master",
     name: "Мастер ратных дел",
     description: "Освоить 10 разных упражнений",
-    icon: "🎯",
+    icon: "IMG:strela",
     check: (_, s) => ({
       earned: s.uniqueExercises >= 10,
       progress: { current: Math.min(s.uniqueExercises, 10), target: 10 },
