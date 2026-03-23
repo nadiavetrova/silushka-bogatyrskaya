@@ -199,7 +199,7 @@ const ACHIEVEMENT_DEFS: AchievementDef[] = [
     id: "iron-week",
     name: "Железная неделя",
     description: "5 тренировок за 7 дней",
-    icon: "⚡",
+    icon: "IMG:molniya",
     check: (_, s) => ({
       earned: s.maxInWeek >= 5,
       progress: { current: Math.min(s.maxInWeek, 5), target: 5 },
