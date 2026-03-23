@@ -165,20 +165,20 @@ export default function AchievementsPage() {
       <div className="grid grid-cols-3 gap-3 mb-6">
         <div className="card-wood rounded-xl p-3 border border-[#3a3530]/50 text-center">
           <p className="text-[#d4bc8e] text-lg font-bold">{workouts.length}</p>
-          <p className="text-[#9b7a4a] text-[9px]">Тренировок</p>
-          <p className="text-[#7a5c35]/60 text-[7px] mt-1">Всего записанных тренировок</p>
+          <p className="text-[#d4bc8e] text-[10px] font-semibold">Тренировок</p>
+          <p className="text-[#9b7a4a]/80 text-[8px] mt-1">Всего записанных тренировок</p>
         </div>
         <div className="card-wood rounded-xl p-3 border border-[#3a3530]/50 text-center">
           <p className="text-[#d4bc8e] text-lg font-bold">
             {totalTonnage >= 1000 ? `${(totalTonnage / 1000).toFixed(1)}т` : `${totalTonnage}кг`}
           </p>
-          <p className="text-[#9b7a4a] text-[9px]">Тоннаж</p>
-          <p className="text-[#7a5c35]/60 text-[7px] mt-1">Сумма всех поднятых килограммов (вес × повторения)</p>
+          <p className="text-[#d4bc8e] text-[10px] font-semibold">Тоннаж</p>
+          <p className="text-[#9b7a4a]/80 text-[8px] mt-1">Сумма всех поднятых килограммов (вес × повторения)</p>
         </div>
         <div className="card-wood rounded-xl p-3 border border-[#3a3530]/50 text-center">
           <p className="text-[#d4bc8e] text-lg font-bold">{maxStreak}</p>
-          <p className="text-[#9b7a4a] text-[9px]">Макс. серия</p>
-          <p className="text-[#7a5c35]/60 text-[7px] mt-1">Тренировок подряд без перерыва больше 3 дней</p>
+          <p className="text-[#d4bc8e] text-[10px] font-semibold">Макс. серия</p>
+          <p className="text-[#9b7a4a]/80 text-[8px] mt-1">Тренировок подряд без перерыва больше 3 дней</p>
         </div>
       </div>
 

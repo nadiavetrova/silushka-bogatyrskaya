@@ -15,7 +15,7 @@ export const LEVELS: BogatyrLevel[] = [
   { name: "Воин", minWorkouts: 15, maxWorkouts: 29, icon: "IMG:sjit" },
   { name: "Витязь", minWorkouts: 30, maxWorkouts: 59, icon: "IMG:luk" },
   { name: "Богатырь", minWorkouts: 60, maxWorkouts: 99, icon: "IMG:kulak" },
-  { name: "Легендарный Богатырь", minWorkouts: 100, maxWorkouts: Infinity, icon: "IMG:wolf" },
+  { name: "Легендарный Богатырь", minWorkouts: 100, maxWorkouts: Infinity, icon: "IMG:dub" },
 ];
 
 export function computeLevel(workoutCount: number) {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AuthGuard } from "@/components/AuthGuard";
@@ -41,6 +41,7 @@ export default function DashboardLayout({
   const user = useAuthStore((s) => s.user);
   const { workouts, fetchWorkouts } = useWorkoutStore();
   const [newCount, setNewCount] = useState(0);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   useEffect(() => {
     fetchWorkouts();
@@ -65,6 +66,13 @@ export default function DashboardLayout({
               </h1>
             </div>
             <div className="flex items-center gap-5">
+              <button
+                onClick={() => setShowShareModal(true)}
+                className="hover:opacity-80 transition-opacity"
+                title="Поделиться"
+              >
+                <img src="/images/share.png" alt="Поделиться" className="w-8 h-8 object-contain" />
+              </button>
               <Link
                 href="/profile"
                 className="hover:opacity-80 transition-opacity"
@@ -82,6 +90,56 @@ export default function DashboardLayout({
             </div>
           </div>
         </header>
+
+        {/* Share QR Modal */}
+        {showShareModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-4" onClick={() => setShowShareModal(false)}>
+            <div
+              className="max-w-sm w-full rounded-2xl border-2 border-[#7a5c35] p-6 text-center"
+              style={{
+                backgroundImage: "linear-gradient(rgba(17,18,16,0.9), rgba(17,18,16,0.9)), url('/images/fortress.png')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img src="/images/bear.png" alt="" className="w-20 h-20 mx-auto mb-4 object-contain" />
+              <h2 className="font-display text-xl text-[#d4bc8e] mb-2">Поведай дружине!</h2>
+              <p className="text-[#9b7a4a] text-sm mb-5">Покажи сей QR-код, дабы соратник твой обрёл путь к Силушке Богатырской</p>
+              <div className="bg-white rounded-xl p-4 mx-auto w-fit mb-5">
+                <img src="/images/qr.png" alt="QR код" className="w-48 h-48 object-contain" />
+              </div>
+              <p className="text-[#7a5c35] text-xs mb-4">silushka-bogatyrskaya.com</p>
+              <div className="flex gap-3">
+                <button
+                  onClick={async () => {
+                    if (navigator.share) {
+                      try {
+                        await navigator.share({
+                          title: "Силушка Богатырская",
+                          text: "Тренируйся по-богатырски! Попробуй Силушку Богатырскую",
+                          url: "https://silushka-bogatyrskaya.com",
+                        });
+                      } catch {}
+                    } else {
+                      await navigator.clipboard.writeText("https://silushka-bogatyrskaya.com");
+                      alert("Ссылка скопирована!");
+                    }
+                  }}
+                  className="flex-1 py-3 rounded-xl bg-[#8b2525] text-[#e8dcc8] font-display text-sm hover:bg-[#a83232] transition-colors"
+                >
+                  Поделиться
+                </button>
+                <button
+                  onClick={() => setShowShareModal(false)}
+                  className="flex-1 py-3 rounded-xl border border-[#7a5c35]/30 text-[#9b7a4a] font-display text-sm hover:bg-[#7a5c35]/10 transition-colors"
+                >
+                  Закрыть
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         <main className="max-w-lg mx-auto px-4 py-4">{children}</main>
 
