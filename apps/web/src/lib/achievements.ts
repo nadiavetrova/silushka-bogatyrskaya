@@ -10,7 +10,7 @@ export interface BogatyrLevel {
 }
 
 export const LEVELS: BogatyrLevel[] = [
-  { name: "Новичок", minWorkouts: 0, maxWorkouts: 4, icon: "🌱" },
+  { name: "Новичок", minWorkouts: 0, maxWorkouts: 4, icon: "IMG:treeIcon" },
   { name: "Ученик", minWorkouts: 5, maxWorkouts: 14, icon: "⚔️" },
   { name: "Воин", minWorkouts: 15, maxWorkouts: 29, icon: "🛡️" },
   { name: "Витязь", minWorkouts: 30, maxWorkouts: 59, icon: "🏹" },

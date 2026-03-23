@@ -16,6 +16,13 @@ import {
   LEVELS,
 } from "@/lib/achievements";
 
+function LevelIcon({ icon, className = "" }: { icon: string; className?: string }) {
+  if (icon.startsWith("IMG:")) {
+    return <img src={`/images/${icon.replace("IMG:", "")}.png`} alt="" className={`inline-block w-6 h-6 object-contain ${className}`} />;
+  }
+  return <span className={className}>{icon}</span>;
+}
+
 const WEEKDAYS = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
 const MONTH_NAMES = [
   "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
@@ -80,8 +87,8 @@ export default function AchievementsPage() {
         <div className="absolute inset-0 bg-gradient-to-r from-[#1a1208]/90 via-[#1a1208]/70 to-transparent" />
         <div className="relative p-5">
           <p className="text-[#a83232] font-display text-lg drop-shadow">Палата Славы</p>
-          <p className="text-[#d4bc8e] text-sm mt-1 drop-shadow">
-            {levelData.level.icon} {levelData.level.name} • {earnedCount}/{achievements.length} достижений
+          <p className="text-[#d4bc8e] text-sm mt-1 drop-shadow flex items-center gap-1">
+            <LevelIcon icon={levelData.level.icon} /> {levelData.level.name} • {earnedCount}/{achievements.length} достижений
           </p>
         </div>
       </div>
@@ -96,8 +103,8 @@ export default function AchievementsPage() {
           <div>
             <p className="text-[#9b7a4a] text-[10px]">Уровень Богатыря</p>
             <div className="flex items-center gap-2">
-              <p className="text-[#d4bc8e] font-display text-xl">
-                {levelData.level.icon} {levelData.level.name}
+              <p className="text-[#d4bc8e] font-display text-xl flex items-center gap-1">
+                <LevelIcon icon={levelData.level.icon} /> {levelData.level.name}
               </p>
               {levelIsNew && (
                 <span className="text-[8px] font-bold bg-[#c54545] text-white px-2 py-0.5 rounded-full animate-pulse">
@@ -143,7 +150,7 @@ export default function AchievementsPage() {
                 key={l.name}
                 className={`flex flex-col items-center gap-0.5 ${isCurrent ? "scale-110" : isPast ? "opacity-60" : "opacity-30"}`}
               >
-                <span className={`text-lg ${isCurrent ? "" : "grayscale"}`}>{l.icon}</span>
+                <LevelIcon icon={l.icon} className={`text-lg ${isCurrent ? "" : "grayscale"}`} />
                 <span className={`text-[7px] ${isCurrent ? "text-[#d4bc8e] font-bold" : "text-[#9b7a4a]"}`}>
                   {l.name.split(" ")[0]}
                 </span>
