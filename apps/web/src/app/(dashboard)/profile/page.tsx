@@ -147,16 +147,20 @@ export default function ProfilePage() {
             };
             await api.updateProfile(data);
             if (name) localStorage.setItem("userName", name);
-            // Записываем замер в историю
-            const m = await api.createMeasurement({
+            // Записываем замер в историю только если есть хотя бы одно значение
+            const measurementData = {
               bodyWeight: bodyWeight ? parseFloat(bodyWeight) : null,
               chest: chest ? parseFloat(chest) : null,
               waist: waist ? parseFloat(waist) : null,
               hips: hips ? parseFloat(hips) : null,
               biceps: biceps ? parseFloat(biceps) : null,
               thigh: thigh ? parseFloat(thigh) : null,
-            });
-            setMeasurements((prev) => [m, ...prev]);
+            };
+            const hasAnyMeasurement = Object.values(measurementData).some((v) => v !== null);
+            if (hasAnyMeasurement) {
+              const m = await api.createMeasurement(measurementData);
+              setMeasurements((prev) => [m, ...prev]);
+            }
             setSaved(true);
             setTimeout(() => setSaved(false), 2000);
           } catch {

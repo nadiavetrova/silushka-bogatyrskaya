@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { useWorkoutStore } from "@/stores/workout";
 import {
@@ -34,6 +34,7 @@ export default function AchievementsPage() {
   const [calMonth, setCalMonth] = useState(() => new Date().getMonth());
   const [calYear, setCalYear] = useState(() => new Date().getFullYear());
 
+  const [newAchievementIds, setNewAchievementIds] = useState<Set<string>>(new Set());
   const seenRef = useRef(false);
 
   useEffect(() => {
@@ -48,10 +49,10 @@ export default function AchievementsPage() {
   const levelIsNew = isLevelNew(levelData.level.name);
 
   // Запоминаем какие достижения были новыми ДО markAllAsSeen (только один раз)
-  const newAchievementIds = useMemo(() => {
-    if (seenRef.current || loading) return new Set<string>();
+  useEffect(() => {
+    if (seenRef.current || loading || achievements.length === 0) return;
     seenRef.current = true;
-    return new Set(achievements.filter((a) => a.earned && isAchievementNew(a.id)).map((a) => a.id));
+    setNewAchievementIds(new Set(achievements.filter((a) => a.earned && isAchievementNew(a.id)).map((a) => a.id)));
   }, [achievements, loading]);
 
   // Отмечаем все как просмотренные после рендера
