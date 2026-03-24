@@ -50,7 +50,7 @@ export async function sendVerificationEmail(
 </html>`;
 
   await resend.emails.send({
-    from: "Силушка Богатырская <onboarding@resend.dev>",
+    from: "Силушка Богатырская <noreply@silushka-bogatyrskaya.com>",
     to,
     subject: `${code} — Твой код подтверждения`,
     html,
