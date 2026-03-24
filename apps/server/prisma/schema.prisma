@@ -20,6 +20,9 @@ model User {
   hips       Float?
   biceps     Float?
   thigh      Float?
+  emailVerified             Boolean   @default(false)
+  verificationCode          String?
+  verificationCodeExpiresAt DateTime?
   createdAt    DateTime      @default(now())
   workouts     Workout[]
   measurements Measurement[]

@@ -12,10 +12,12 @@ const PORT = process.env.PORT || 4000;
 app.use(cors({ origin: process.env.CORS_ORIGIN?.split(",") || ["http://localhost:3000"], credentials: true }));
 app.use(express.json());
 
+import { verifiedMiddleware } from "./middleware/auth";
+
 app.use("/auth", authRouter);
-app.use("/workouts", workoutsRouter);
-app.use("/exercises", exercisesRouter);
-app.use("/profile", profileRouter);
+app.use("/workouts", verifiedMiddleware, workoutsRouter);
+app.use("/exercises", verifiedMiddleware, exercisesRouter);
+app.use("/profile", verifiedMiddleware, profileRouter);
 
 app.get("/health", (_req, res) => {
   res.json({ status: "ok" });

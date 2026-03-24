@@ -20,7 +20,8 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await login(email, password);
-      router.replace("/");
+      const verified = localStorage.getItem("emailVerified") === "true";
+      router.replace(verified ? "/" : "/verify");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Ошибка входа");
     } finally {
