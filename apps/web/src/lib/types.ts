@@ -25,6 +25,7 @@ export interface UserData {
   id: string;
   email: string;
   name?: string;
+  emailVerified?: boolean;
 }
 
 export interface ProfileData {

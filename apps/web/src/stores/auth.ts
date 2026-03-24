@@ -29,7 +29,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     const { token, user } = await api.login({ email, password });
     localStorage.setItem("token", token);
     if (user.name) localStorage.setItem("userName", user.name);
-    const verified = (user as Record<string, unknown>).emailVerified === true;
+    const verified = user.emailVerified === true;
     localStorage.setItem("emailVerified", String(verified));
     set({ token, user, isNewUser: false, emailVerified: verified });
   },
