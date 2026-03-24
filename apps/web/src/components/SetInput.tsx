@@ -18,6 +18,8 @@ export function SetInput({ set, index, onUpdate, onRemove, canRemove }: Props) {
         <div className="flex-1">
           <input
             type="number"
+            inputMode="decimal"
+            step="0.1"
             value={set.weight || ""}
             onChange={(e) => onUpdate({ weight: parseFloat(e.target.value) || 0 })}
             placeholder="кг"
