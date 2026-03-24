@@ -65,27 +65,27 @@ export default function DashboardLayout({
                 Силушка Богатырская
               </h1>
             </div>
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-4">
               <button
                 onClick={() => setShowShareModal(true)}
-                className="hover:opacity-80 transition-opacity"
+                className="hover:opacity-80 transition-opacity w-9 h-9 flex items-center justify-center"
                 title="Поделиться"
               >
                 <img src="/images/share.png" alt="Поделиться" className="w-8 h-8 object-contain" />
               </button>
               <Link
                 href="/profile"
-                className="hover:opacity-80 transition-opacity"
+                className="hover:opacity-80 transition-opacity w-9 h-9 flex items-center justify-center"
                 title="Личная Грамота"
               >
                 <img src="/images/kabinet.png" alt="Личный кабинет" className="w-8 h-8 object-contain" />
               </Link>
               <button
                 onClick={logout}
-                className="hover:opacity-80 transition-opacity"
+                className="hover:opacity-80 transition-opacity w-9 h-9 flex items-center justify-center"
                 title="Выйти"
               >
-                <img src="/images/exit.png" alt="Выйти" className="w-14 h-14 object-contain" />
+                <img src="/images/exit.png" alt="Выйти" className="w-8 h-8 object-contain" />
               </button>
             </div>
           </div>
