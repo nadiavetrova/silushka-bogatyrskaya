@@ -91,6 +91,12 @@ export default function LoginPage() {
             >
               {loading ? "Ожидание..." : "Войти"}
             </button>
+
+            <p className="text-center mt-2">
+              <Link href="/forgot-password" className="text-[#9b7a4a] hover:text-[#d4bc8e] text-xs transition-colors">
+                Забыл тайное слово?
+              </Link>
+            </p>
           </form>
 
           <div className="flex items-center gap-3 my-4">

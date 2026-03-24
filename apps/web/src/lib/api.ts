@@ -80,4 +80,14 @@ export const api = {
     }),
   resendCode: () =>
     request<{ success: boolean }>("/auth/resend-code", { method: "POST" }),
+  forgotPassword: (data: { email: string }) =>
+    request<{ success: boolean }>("/auth/forgot-password", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  resetPassword: (data: { email: string; code: string; newPassword: string }) =>
+    request<{ success: boolean }>("/auth/reset-password", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
 };

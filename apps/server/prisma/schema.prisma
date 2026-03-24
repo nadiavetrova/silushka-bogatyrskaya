@@ -23,6 +23,8 @@ model User {
   emailVerified             Boolean   @default(false)
   verificationCode          String?
   verificationCodeExpiresAt DateTime?
+  resetCode                 String?
+  resetCodeExpiresAt        DateTime?
   createdAt    DateTime      @default(now())
   workouts     Workout[]
   measurements Measurement[]
