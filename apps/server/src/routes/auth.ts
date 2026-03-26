@@ -7,6 +7,22 @@ import { generateVerificationCode, sendVerificationEmail, sendPasswordResetEmail
 
 const router = Router();
 
+async function notifyTelegram(email: string, name: string) {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+  if (!token || !chatId) return;
+  try {
+    const text = `🐻 Новый богатырь!\n\nИмя: ${name || "—"}\nПочта: ${email}`;
+    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: chatId, text }),
+    });
+  } catch (err) {
+    console.error("Telegram notify error:", err);
+  }
+}
+
 const registerSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
@@ -52,6 +68,9 @@ router.post("/register", async (req, res) => {
     } catch (emailErr) {
       console.error("Failed to send verification email:", emailErr);
     }
+
+    // Уведомление в Telegram
+    notifyTelegram(email, name || "");
 
     const token = generateToken(user.id);
     res.json({
