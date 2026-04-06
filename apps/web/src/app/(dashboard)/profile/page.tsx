@@ -19,6 +19,10 @@ export default function ProfilePage() {
   const [measurements, setMeasurements] = useState<MeasurementData[]>([]);
   const [savingMeasurement, setSavingMeasurement] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [feedbackText, setFeedbackText] = useState("");
+  const [sendingFeedback, setSendingFeedback] = useState(false);
+  const [feedbackSent, setFeedbackSent] = useState(false);
 
   // Form fields
   const [name, setName] = useState("");
@@ -233,6 +237,15 @@ export default function ProfilePage() {
         </div>
       )}
 
+      {/* Feedback button */}
+      <motion.button
+        whileTap={{ scale: 0.97 }}
+        onClick={() => { setShowFeedbackModal(true); setFeedbackSent(false); setFeedbackText(""); }}
+        className="w-full mt-6 py-3 rounded-xl font-display text-sm bg-[#2a1f0f] text-[#d4bc8e] border border-[#7a5c35]/30 hover:bg-[#3a2f1f] transition-colors"
+      >
+        Оставить отзыв
+      </motion.button>
+
       {/* Legal links */}
       <div className="mt-6 pt-4 border-t border-[#3a3530]/30">
         <a href="/about" className="block text-center text-[#b89a6a] text-xs mb-2 hover:text-[#d4bc8e]">
@@ -252,6 +265,70 @@ export default function ProfilePage() {
           После удаления все данные будут безвозвратно стёрты
         </p>
       </div>
+
+      {/* Feedback modal */}
+      {showFeedbackModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-6" onClick={() => setShowFeedbackModal(false)}>
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            onClick={(e) => e.stopPropagation()}
+            className="card-wood rounded-xl p-6 border border-[#7a5c35]/30 max-w-sm w-full"
+          >
+            <img src="/images/bear.png" alt="" className="w-16 h-16 mx-auto mb-3 object-contain" />
+            <h3 className="text-[#d4bc8e] font-display text-lg text-center mb-2">Слово Богатыря</h3>
+            <p className="text-[#9b7a4a] text-xs text-center mb-4">Поведай Берегине, что думаешь о Силушке</p>
+            {feedbackSent ? (
+              <div className="text-center py-4">
+                <p className="text-[#5ea352] font-display text-sm">Благодарствую, Богатырь!</p>
+                <p className="text-[#9b7a4a] text-xs mt-2">Твоё слово услышано</p>
+                <button
+                  onClick={() => setShowFeedbackModal(false)}
+                  className="mt-4 px-6 py-2 rounded-xl text-sm bg-[#2a1f0f] text-[#d4bc8e] border border-[#3a3530]/50"
+                >
+                  Закрыть
+                </button>
+              </div>
+            ) : (
+              <>
+                <textarea
+                  value={feedbackText}
+                  onChange={(e) => setFeedbackText(e.target.value)}
+                  placeholder="Напиши свой отзыв..."
+                  rows={4}
+                  className="w-full bg-[#1a1918]/95 border border-[#3a3530]/50 focus:border-[#7a5c35]/50 rounded-xl px-3 py-2.5 text-[#e8dcc8] text-sm focus:outline-none placeholder-[#7a5c35]/50 resize-none"
+                />
+                <div className="flex gap-3 mt-4">
+                  <button
+                    onClick={() => setShowFeedbackModal(false)}
+                    className="flex-1 py-2.5 rounded-xl text-sm bg-[#2a1f0f] text-[#d4bc8e] border border-[#3a3530]/50"
+                  >
+                    Отмена
+                  </button>
+                  <button
+                    onClick={async () => {
+                      if (!feedbackText.trim()) return;
+                      setSendingFeedback(true);
+                      try {
+                        await api.sendFeedback(feedbackText.trim());
+                        setFeedbackSent(true);
+                      } catch {
+                        alert("Ошибка отправки");
+                      } finally {
+                        setSendingFeedback(false);
+                      }
+                    }}
+                    disabled={sendingFeedback || !feedbackText.trim()}
+                    className="flex-1 py-2.5 rounded-xl text-sm bg-[#3a1515] text-[#d4bc8e] border border-[#8b2525]/30 disabled:opacity-50"
+                  >
+                    {sendingFeedback ? "Отправляю..." : "Отправить"}
+                  </button>
+                </div>
+              </>
+            )}
+          </motion.div>
+        </div>
+      )}
 
       {/* Delete confirmation modal */}
       {showDeleteModal && (

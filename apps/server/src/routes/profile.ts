@@ -111,6 +111,31 @@ router.delete("/measurements/:id", async (req, res) => {
   }
 });
 
+// POST /profile/feedback — отправить отзыв в Telegram
+router.post("/feedback", async (req, res) => {
+  try {
+    const { message } = req.body;
+    if (!message || typeof message !== "string" || message.trim().length === 0) {
+      res.status(400).json({ message: "Пустой отзыв" });
+      return;
+    }
+    const user = await prisma.user.findUnique({ where: { id: req.userId }, select: { email: true, name: true } });
+    const token = process.env.TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.TELEGRAM_CHAT_ID;
+    if (token && chatId) {
+      const text = `📝 Отзыв от пользователя!\n\nИмя: ${user?.name || "—"}\nПочта: ${user?.email || "—"}\n\n💬 ${message.trim()}`;
+      await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: chatId, text }),
+      });
+    }
+    res.json({ message: "Отзыв отправлен" });
+  } catch {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 // DELETE /profile — удалить аккаунт и все данные
 router.delete("/", async (req, res) => {
   try {

@@ -90,4 +90,9 @@ export const api = {
       method: "POST",
       body: JSON.stringify(data),
     }),
+  sendFeedback: (message: string) =>
+    request<{ message: string }>("/profile/feedback", {
+      method: "POST",
+      body: JSON.stringify({ message }),
+    }),
 };
