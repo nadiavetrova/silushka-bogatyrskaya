@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useWorkoutStore } from "@/stores/workout";
 import { useAuthStore } from "@/stores/auth";
 import { api } from "@/lib/api";
+import type { WorkoutData } from "@/lib/types";
 
 // --- Types ---
 
@@ -194,8 +195,7 @@ function saveCustomExercises(data: Record<string, string[]>) {
   localStorage.setItem(CUSTOM_EX_KEY, JSON.stringify(data));
 }
 
-// --- LocalStorage for per-set history (supplement to DB) ---
-const STORAGE_KEY = "silushka_set_history";
+// --- Build set history from DB workouts ---
 
 interface SavedSetRecord {
   date: string;
@@ -206,14 +206,26 @@ interface SavedSetRecord {
   difficulty: string;
 }
 
-function loadSetHistory(): SavedSetRecord[] {
-  if (typeof window === "undefined") return [];
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
-  catch { return []; }
-}
-
-function saveSetHistory(records: SavedSetRecord[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+function buildSetHistoryFromWorkouts(workouts: WorkoutData[]): SavedSetRecord[] {
+  const records: SavedSetRecord[] = [];
+  for (const w of workouts) {
+    const date = w.date.split("T")[0];
+    for (const ex of w.exercises) {
+      ex.sets.forEach((s, i) => {
+        records.push({
+          date,
+          exerciseName: ex.name,
+          setIndex: i,
+          weight: s.weight,
+          reps: s.reps,
+          difficulty: ex.difficulty || "medium",
+        });
+      });
+    }
+  }
+  // Сортируем по дате (старые → новые)
+  records.sort((a, b) => a.date.localeCompare(b.date));
+  return records;
 }
 
 // --- Tip Block ---
@@ -244,7 +256,7 @@ function TipBlock({ title, content }: { title: string; content: string[] }) {
 
 export default function ProgramsPage() {
   const [selectedProgram, setSelectedProgram] = useState<string>(DEFAULT_PROGRAMS[0].id);
-  const [setHistory, setSetHistory] = useState<SavedSetRecord[]>(() => loadSetHistory());
+  const [setHistory, setSetHistory] = useState<SavedSetRecord[]>([]);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [newExName, setNewExName] = useState("");
@@ -297,8 +309,14 @@ export default function ProgramsPage() {
 
   useEffect(() => {
     fetchWorkouts();
-    setSetHistory(loadSetHistory());
   }, [fetchWorkouts]);
+
+  // Строим историю подходов из БД (workouts)
+  useEffect(() => {
+    if (workouts.length > 0) {
+      setSetHistory(buildSetHistoryFromWorkouts(workouts));
+    }
+  }, [workouts]);
 
   const program = DEFAULT_PROGRAMS.find((p) => p.id === selectedProgram)!;
 
@@ -435,26 +453,6 @@ export default function ProgramsPage() {
         await api.createWorkout({ date: today, exercises: apiExercises });
         await fetchWorkouts();
       }
-
-      // Save per-set history to localStorage
-      const newRecords: SavedSetRecord[] = [];
-      for (const ex of exercises) {
-        ex.sets.forEach((s, i) => {
-          if (s.difficulty) {
-            newRecords.push({
-              date: today,
-              exerciseName: ex.name,
-              setIndex: i,
-              weight: s.weight,
-              reps: s.reps,
-              difficulty: s.difficulty,
-            });
-          }
-        });
-      }
-      const updated = [...setHistory, ...newRecords];
-      saveSetHistory(updated);
-      setSetHistory(updated);
 
       setSaved(true);
       setShowSuccessModal(true);
