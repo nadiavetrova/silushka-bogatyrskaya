@@ -82,7 +82,7 @@ router.post("/register", async (req, res) => {
       res.status(400).json({ message: err.errors[0].message });
       return;
     }
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Ошибка сервера" });
   }
 });
 
@@ -92,13 +92,13 @@ router.post("/login", async (req, res) => {
 
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
-      res.status(401).json({ message: "Invalid credentials" });
+      res.status(401).json({ message: "Неверная грамота или тайное слово" });
       return;
     }
 
     const valid = await comparePassword(password, user.password);
     if (!valid) {
-      res.status(401).json({ message: "Invalid credentials" });
+      res.status(401).json({ message: "Неверная грамота или тайное слово" });
       return;
     }
 
@@ -112,7 +112,7 @@ router.post("/login", async (req, res) => {
       res.status(400).json({ message: err.errors[0].message });
       return;
     }
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Ошибка сервера" });
   }
 });
 
@@ -157,7 +157,7 @@ router.post("/verify", authMiddleware, async (req, res) => {
       res.status(400).json({ message: err.errors[0].message });
       return;
     }
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Ошибка сервера" });
   }
 });
 
@@ -202,7 +202,7 @@ router.post("/resend-code", authMiddleware, async (req, res) => {
 
     res.json({ success: true });
   } catch {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Ошибка сервера" });
   }
 });
 
@@ -251,7 +251,7 @@ router.post("/forgot-password", async (req, res) => {
       res.status(400).json({ message: err.errors[0].message });
       return;
     }
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Ошибка сервера" });
   }
 });
 
@@ -299,7 +299,7 @@ router.post("/reset-password", async (req, res) => {
       res.status(400).json({ message: err.errors[0].message });
       return;
     }
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Ошибка сервера" });
   }
 });
 
