@@ -70,7 +70,8 @@ export default function AchievementsPage() {
   // Calendar
   const workoutDates = getWorkoutDatesSet(workouts);
   const calDays = getCalendarDays(calYear, calMonth);
-  const today = new Date().toISOString().split("T")[0];
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
 
   const prevMonth = () => {
     if (calMonth === 0) { setCalMonth(11); setCalYear(calYear - 1); }

@@ -278,6 +278,10 @@ export function getWorkoutDatesSet(workouts: WorkoutData[]): Set<string> {
   return new Set(workouts.map((w) => new Date(w.date).toISOString().split("T")[0]));
 }
 
+function toLocalDateStr(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
 export function getCalendarDays(year: number, month: number) {
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
@@ -287,19 +291,19 @@ export function getCalendarDays(year: number, month: number) {
   // Previous month padding
   for (let i = startPad - 1; i >= 0; i--) {
     const d = new Date(year, month, -i);
-    days.push({ date: d.toISOString().split("T")[0], day: d.getDate(), inMonth: false });
+    days.push({ date: toLocalDateStr(d), day: d.getDate(), inMonth: false });
   }
   // Current month
   for (let d = 1; d <= lastDay.getDate(); d++) {
     const date = new Date(year, month, d);
-    days.push({ date: date.toISOString().split("T")[0], day: d, inMonth: true });
+    days.push({ date: toLocalDateStr(date), day: d, inMonth: true });
   }
   // Next month padding
   const remaining = 7 - (days.length % 7);
   if (remaining < 7) {
     for (let d = 1; d <= remaining; d++) {
       const date = new Date(year, month + 1, d);
-      days.push({ date: date.toISOString().split("T")[0], day: d, inMonth: false });
+      days.push({ date: toLocalDateStr(date), day: d, inMonth: false });
     }
   }
 
