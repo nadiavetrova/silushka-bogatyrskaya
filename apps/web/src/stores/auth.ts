@@ -15,7 +15,7 @@ interface AuthState {
   resendCode: () => Promise<void>;
   isNewUser: boolean;
   logout: () => void;
-  hydrate: () => void;
+  hydrate: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -58,20 +58,72 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ token: null, user: null, emailVerified: false });
   },
 
-  hydrate: () => {
+  hydrate: async () => {
     const token = localStorage.getItem("token");
-    if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        const name = localStorage.getItem("userName") || "";
-        const verified = localStorage.getItem("emailVerified") === "true";
-        set({ token, user: { id: payload.userId, email: "", name }, hydrated: true, emailVerified: verified });
-      } catch {
-        localStorage.removeItem("token");
-        set({ hydrated: true });
-      }
-    } else {
+    if (!token) {
       set({ hydrated: true });
+      return;
     }
+
+    // Проверяем срок действия токена локально (быстро, без запроса)
+    let payload: { userId: string; exp?: number };
+    try {
+      payload = JSON.parse(atob(token.split(".")[1]));
+    } catch {
+      localStorage.removeItem("token");
+      localStorage.removeItem("emailVerified");
+      set({ hydrated: true });
+      return;
+    }
+
+    if (payload.exp && payload.exp * 1000 < Date.now()) {
+      // Токен истёк — выходим
+      localStorage.removeItem("token");
+      localStorage.removeItem("emailVerified");
+      set({ hydrated: true });
+      return;
+    }
+
+    // Проверяем токен на сервере и получаем свежие данные (включая emailVerified из базы)
+    const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+    try {
+      const res = await fetch(`${BASE_URL}/auth/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (res.status === 401) {
+        // Токен недействителен на сервере — выходим
+        localStorage.removeItem("token");
+        localStorage.removeItem("emailVerified");
+        set({ hydrated: true });
+        return;
+      }
+
+      if (res.ok) {
+        const user = await res.json();
+        // Обновляем localStorage свежими данными из базы
+        localStorage.setItem("emailVerified", String(user.emailVerified));
+        if (user.name) localStorage.setItem("userName", user.name);
+        set({
+          token,
+          user: { id: user.id, email: user.email, name: user.name },
+          emailVerified: user.emailVerified,
+          hydrated: true,
+        });
+        return;
+      }
+    } catch {
+      // Нет интернета или сервер не отвечает — используем данные из localStorage
+    }
+
+    // Fallback: доверяем localStorage (offline-режим)
+    const name = localStorage.getItem("userName") || "";
+    const verified = localStorage.getItem("emailVerified") === "true";
+    set({
+      token,
+      user: { id: payload.userId, email: "", name },
+      emailVerified: verified,
+      hydrated: true,
+    });
   },
 }));

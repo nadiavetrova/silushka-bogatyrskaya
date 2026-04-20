@@ -303,4 +303,21 @@ router.post("/reset-password", async (req, res) => {
   }
 });
 
+// Получить текущего пользователя (для проверки токена при старте приложения)
+router.get("/me", authMiddleware, async (req, res) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: req.userId },
+      select: { id: true, email: true, name: true, emailVerified: true },
+    });
+    if (!user) {
+      res.status(404).json({ message: "Пользователь не найден" });
+      return;
+    }
+    res.json(user);
+  } catch {
+    res.status(500).json({ message: "Ошибка сервера" });
+  }
+});
+
 export default router;

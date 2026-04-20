@@ -73,6 +73,8 @@ export const api = {
     request<MeasurementData>("/profile/measurements", { method: "POST", body: JSON.stringify(data) }),
   deleteMeasurement: (id: string) =>
     request<{ message: string }>(`/profile/measurements/${id}`, { method: "DELETE" }),
+  getMe: () =>
+    request<{ id: string; email: string; name: string; emailVerified: boolean }>("/auth/me"),
   verifyEmail: (data: { code: string }) =>
     request<{ success: boolean; emailVerified: boolean }>("/auth/verify", {
       method: "POST",
