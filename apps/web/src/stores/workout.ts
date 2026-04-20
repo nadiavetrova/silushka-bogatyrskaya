@@ -31,8 +31,13 @@ interface WorkoutState {
   resetCurrent: () => void;
 }
 
+function todayLocalDate(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
 const emptyWorkout = () => ({
-  date: new Date().toISOString().split("T")[0],
+  date: todayLocalDate(),
   exercises: [],
 });
 

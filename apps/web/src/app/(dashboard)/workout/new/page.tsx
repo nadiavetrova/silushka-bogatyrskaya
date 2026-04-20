@@ -16,6 +16,7 @@ export default function NewWorkoutPage() {
   } = useWorkoutStore();
 
   const [exerciseName, setExerciseName] = useState("");
+  const [saveError, setSaveError] = useState("");
 
   useEffect(() => {
     resetCurrent();
@@ -47,8 +48,13 @@ export default function NewWorkoutPage() {
 
   const handleSave = async () => {
     if (currentWorkout.exercises.length === 0) return;
-    await saveWorkout();
-    router.push("/dashboard");
+    setSaveError("");
+    try {
+      await saveWorkout();
+      router.push("/dashboard");
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : "Не удалось сохранить тренировку. Проверь связь и попробуй снова.");
+    }
   };
 
   return (
@@ -130,6 +136,12 @@ export default function NewWorkoutPage() {
           ))}
         </div>
       </AnimatePresence>
+
+      {saveError && (
+        <div className="mb-3 p-3 bg-[#6b1a1a]/30 border border-[#a83232]/40 rounded-xl text-[#a83232] text-sm text-center">
+          ⚠️ {saveError}
+        </div>
+      )}
 
       {currentWorkout.exercises.length > 0 && (
         <motion.button
