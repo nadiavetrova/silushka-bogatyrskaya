@@ -30,7 +30,11 @@ export function SetInput({ set, index, onUpdate, onRemove, canRemove }: Props) {
           <input
             type="number"
             value={set.reps || ""}
-            onChange={(e) => onUpdate({ reps: parseInt(e.target.value) || 0 })}
+            onChange={(e) => {
+              const val = parseInt(e.target.value);
+              if (!isNaN(val) && val > 0) onUpdate({ reps: val });
+              else if (e.target.value === "") onUpdate({ reps: 1 });
+            }}
             placeholder="повт"
             className="w-full px-3 py-2 bg-[#151412] border border-[#7a5c35]/40 rounded-lg text-[#e8dcc8] text-sm focus:outline-none focus:border-[#8b2525]/60"
           />

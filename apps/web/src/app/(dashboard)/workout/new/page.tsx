@@ -49,6 +49,17 @@ export default function NewWorkoutPage() {
   const handleSave = async () => {
     if (currentWorkout.exercises.length === 0) return;
     setSaveError("");
+
+    // Проверка перед отправкой
+    for (const ex of currentWorkout.exercises) {
+      for (const s of ex.sets) {
+        if (!s.reps || s.reps < 1) {
+          setSaveError("Укажи количество повторений во всех подходах (минимум 1)");
+          return;
+        }
+      }
+    }
+
     try {
       await saveWorkout();
       router.push("/dashboard");
