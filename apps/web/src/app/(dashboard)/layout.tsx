@@ -22,7 +22,7 @@ const navItems = [
   {
     href: "/nutrition",
     label: "Богатырская\nТрапеза",
-    icon: <div className="w-8 h-8 flex items-center justify-center text-2xl leading-none">🍽️</div>,
+    icon: <img src="/images/eda.png" alt="Богатырская Трапеза" className="w-8 h-8 object-contain" />,
   },
   {
     href: "/progress",
