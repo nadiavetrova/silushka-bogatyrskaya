@@ -57,22 +57,26 @@ ${nutrition
 📊 ИТОГО: {число} ккал | Б:{число}г | У:{число}г | Ж:{число}г
 6. Отвечай структурировано, с разбивкой по приёмам пищи`;
 
-    const geminiMessages = messages.map((m: { role: string; text: string }) => ({
-      role: m.role === "ai" ? "model" : "user",
-      parts: [{ text: m.text }],
-    }));
+    // Системный промпт добавляем первым сообщением (совместимо со всеми моделями)
+    const geminiMessages = [
+      { role: "user", parts: [{ text: systemPrompt }] },
+      { role: "model", parts: [{ text: "Понял! Буду следовать всем правилам и помогать с питанием." }] },
+      ...messages.map((m: { role: string; text: string }) => ({
+        role: m.role === "ai" ? "model" : "user",
+        parts: [{ text: m.text }],
+      })),
+    ];
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) { res.status(500).json({ message: "Gemini API не настроен на сервере" }); return; }
 
     const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           contents: geminiMessages,
-          systemInstruction: { parts: [{ text: systemPrompt }] },
           generationConfig: { temperature: 0.7, maxOutputTokens: 2048 },
         }),
       }
