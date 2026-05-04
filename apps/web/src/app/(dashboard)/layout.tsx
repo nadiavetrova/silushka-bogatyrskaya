@@ -20,6 +20,11 @@ const navItems = [
     icon: <img src="/images/zabava.png" alt="Летопись Свершений" className="w-8 h-8 object-contain" />,
   },
   {
+    href: "/nutrition",
+    label: "Богатырская\nТрапеза",
+    icon: <div className="w-8 h-8 flex items-center justify-center text-2xl leading-none">🍽️</div>,
+  },
+  {
     href: "/progress",
     label: "Ведомость\nСилушки",
     icon: <img src="/images/sver.png" alt="Ведомость Силушки" className="w-8 h-8 object-contain" />,

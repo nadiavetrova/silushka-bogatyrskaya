@@ -28,6 +28,21 @@ model User {
   createdAt    DateTime      @default(now())
   workouts     Workout[]
   measurements Measurement[]
+  mealPlans    MealPlan[]
+}
+
+model MealPlan {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  date      String
+  content   Json
+  totalKcal Float    @default(0)
+  protein   Float?
+  carbs     Float?
+  fat       Float?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Measurement {

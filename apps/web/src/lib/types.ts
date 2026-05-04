@@ -96,6 +96,19 @@ export interface CreateExerciseRequest {
   sets: SetData[];
 }
 
+// Nutrition
+export interface MealPlan {
+  id: string;
+  title: string;
+  date: string;
+  content: { text: string };
+  totalKcal: number;
+  protein?: number;
+  carbs?: number;
+  fat?: number;
+  createdAt: string;
+}
+
 // Adaptation
 export interface AdaptationSuggestion {
   exerciseName: string;

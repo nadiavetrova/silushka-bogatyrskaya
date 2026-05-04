@@ -5,6 +5,7 @@ import authRouter from "./routes/auth";
 import workoutsRouter from "./routes/workouts";
 import exercisesRouter from "./routes/exercises";
 import profileRouter from "./routes/profile";
+import nutritionRouter from "./routes/nutrition";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -18,6 +19,7 @@ app.use("/auth", authRouter);
 app.use("/workouts", verifiedMiddleware, workoutsRouter);
 app.use("/exercises", verifiedMiddleware, exercisesRouter);
 app.use("/profile", verifiedMiddleware, profileRouter);
+app.use("/nutrition", verifiedMiddleware, nutritionRouter);
 
 app.get("/health", (_req, res) => {
   res.json({ status: "ok" });

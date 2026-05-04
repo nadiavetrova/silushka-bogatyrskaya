@@ -97,4 +97,15 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ message }),
     }),
+  nutritionChat: (messages: { role: string; text: string }[]) =>
+    request<{ reply: string }>("/nutrition/chat", {
+      method: "POST",
+      body: JSON.stringify({ messages }),
+    }),
+  getMealPlans: () =>
+    request<MealPlan[]>("/nutrition/plans"),
+  saveMealPlan: (data: { title: string; date: string; content: { text: string }; totalKcal: number; protein?: number; carbs?: number; fat?: number }) =>
+    request<MealPlan>("/nutrition/plans", { method: "POST", body: JSON.stringify(data) }),
+  deleteMealPlan: (id: string) =>
+    request<{ message: string }>(`/nutrition/plans/${id}`, { method: "DELETE" }),
 };
