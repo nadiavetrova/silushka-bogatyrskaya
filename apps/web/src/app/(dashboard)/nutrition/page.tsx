@@ -180,7 +180,7 @@ export default function NutritionPage() {
                 <div className="w-8 h-8 flex-shrink-0">
                   {msg.role === "ai"
                     ? <img src="/images/druzhina.png" alt="Берегиня" className="w-8 h-8 object-contain" />
-                    : <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm border border-[#5ea352]/30 bg-[#0a1a0a]">👤</div>
+                    : <img src="/images/wolf.png" alt="Я" className="w-8 h-8 object-contain" />
                   }
                 </div>
                 <div className={`flex-1 min-w-0 ${msg.role === "user" ? "items-end flex flex-col" : ""}`}>
