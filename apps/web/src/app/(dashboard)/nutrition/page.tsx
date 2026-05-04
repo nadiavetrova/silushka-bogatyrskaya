@@ -174,14 +174,11 @@ export default function NutritionPage() {
           <div className="flex flex-col gap-4 mb-4">
             {messages.map((msg) => (
               <div key={msg.id} className={`flex gap-2 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
-                <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm flex-shrink-0 border ${
-                    msg.role === "ai"
-                      ? "border-[#7a5c35]/40 bg-[#2a1208]"
-                      : "border-[#5ea352]/30 bg-[#0a1a0a]"
-                  }`}
-                >
-                  {msg.role === "ai" ? "🌿" : "👤"}
+                <div className="w-8 h-8 flex-shrink-0">
+                  {msg.role === "ai"
+                    ? <img src="/images/chat.png" alt="Берегиня" className="w-8 h-8 object-contain" />
+                    : <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm border border-[#5ea352]/30 bg-[#0a1a0a]">👤</div>
+                  }
                 </div>
                 <div className={`flex-1 min-w-0 ${msg.role === "user" ? "items-end flex flex-col" : ""}`}>
                   <div
@@ -215,7 +212,7 @@ export default function NutritionPage() {
             {/* Thinking indicator */}
             {loading && (
               <div className="flex gap-2">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm border border-[#7a5c35]/40 bg-[#2a1208]">🌿</div>
+                <img src="/images/chat.png" alt="Берегиня" className="w-8 h-8 object-contain flex-shrink-0" />
                 <div className="card-wood border border-[#7a5c35]/30 rounded-2xl rounded-tl-sm px-4 py-3">
                   <div className="flex gap-1 items-center">
                     {[0, 1, 2].map((i) => (
