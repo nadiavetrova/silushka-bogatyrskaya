@@ -80,8 +80,9 @@ ${nutrition
 
     if (!geminiRes.ok) {
       const err = await geminiRes.json().catch(() => ({}));
-      console.error("Gemini error:", err);
-      res.status(500).json({ message: "Ошибка ИИ, попробуй позже" });
+      console.error("Gemini error:", JSON.stringify(err));
+      const geminiMsg = err?.error?.message || err?.message || `HTTP ${geminiRes.status}`;
+      res.status(500).json({ message: `Gemini: ${geminiMsg}` });
       return;
     }
 
