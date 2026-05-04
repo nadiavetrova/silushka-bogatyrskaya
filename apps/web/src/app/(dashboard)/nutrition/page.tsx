@@ -158,14 +158,14 @@ export default function NutritionPage() {
           onClick={() => setTab("chat")}
           className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${tab === "chat" ? "bg-[#3b0a0a] text-[#e8dcc8]" : "text-[#9b7a4a] hover:text-[#d4bc8e]"}`}
         >
-          <img src="/images/chat.png" alt="" className="w-5 h-5 object-contain" />
+          <img src="/images/chat.png" alt="" className="w-7 h-7 object-contain" />
           Чат с Берегиней
         </button>
         <button
           onClick={() => setTab("plans")}
           className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${tab === "plans" ? "bg-[#3b0a0a] text-[#e8dcc8]" : "text-[#9b7a4a] hover:text-[#d4bc8e]"}`}
         >
-          <img src="/images/menu.png" alt="" className="w-5 h-5 object-contain" />
+          <img src="/images/menu.png" alt="" className="w-7 h-7 object-contain" />
           Мои планы {plans.length > 0 && `(${plans.length})`}
         </button>
       </div>
