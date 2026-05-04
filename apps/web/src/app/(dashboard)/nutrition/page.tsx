@@ -99,9 +99,10 @@ export default function NutritionPage() {
       const aiMsg: Message = { role: "ai", text: reply, id: Date.now().toString() + "_ai" };
       setMessages((prev) => [...prev, aiMsg]);
     } catch (err) {
+      const errText = err instanceof Error ? err.message : "Неизвестная ошибка";
       const errMsg: Message = {
         role: "ai",
-        text: "Прости, что-то пошло не так. Попробуй ещё раз 🙏",
+        text: `Прости, что-то пошло не так 🙏\n\n⚠️ ${errText}`,
         id: Date.now().toString() + "_err",
       };
       setMessages((prev) => [...prev, errMsg]);
@@ -232,20 +233,6 @@ export default function NutritionPage() {
             )}
 
             <div ref={chatEndRef} />
-          </div>
-
-          {/* Quick chips */}
-          <div className="flex gap-2 overflow-x-auto pb-2 mb-2 scrollbar-none">
-            {QUICK_CHIPS.map((chip) => (
-              <button
-                key={chip}
-                onClick={() => sendMessage(chip)}
-                disabled={loading}
-                className="flex-shrink-0 bg-[#2a1f0f] border border-[#7a5c35]/35 rounded-full px-3 py-1.5 text-[11px] text-[#b89a6a] hover:border-[#8b2525]/50 hover:text-[#d4bc8e] transition-all disabled:opacity-50 whitespace-nowrap"
-              >
-                {chip}
-              </button>
-            ))}
           </div>
 
           {/* Input */}
