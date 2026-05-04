@@ -179,7 +179,7 @@ export default function NutritionPage() {
               <div key={msg.id} className={`flex gap-2 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
                 <div className="w-8 h-8 flex-shrink-0">
                   {msg.role === "ai"
-                    ? <img src="/images/chat.png" alt="Берегиня" className="w-8 h-8 object-contain" />
+                    ? <img src="/images/druzhina.png" alt="Берегиня" className="w-8 h-8 object-contain" />
                     : <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm border border-[#5ea352]/30 bg-[#0a1a0a]">👤</div>
                   }
                 </div>
