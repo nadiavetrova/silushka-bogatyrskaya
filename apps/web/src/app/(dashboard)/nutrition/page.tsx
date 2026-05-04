@@ -188,7 +188,7 @@ export default function NutritionPage() {
                     className={`rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
                       msg.role === "ai"
                         ? "card-wood border border-[#7a5c35]/30 rounded-tl-sm text-[#e8dcc8]"
-                        : "bg-[#1a3a1a]/60 border border-[#5ea352]/20 rounded-tr-sm text-[#d4e8d0] max-w-[85%]"
+                        : "bg-[#0d2010] border border-[#2a5a2a]/40 rounded-tr-sm text-[#d4e8d0] max-w-[85%]"
                     }`}
                   >
                     {msg.text}
