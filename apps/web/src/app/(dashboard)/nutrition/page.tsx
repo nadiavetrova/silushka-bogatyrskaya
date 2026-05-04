@@ -156,14 +156,14 @@ export default function NutritionPage() {
       <div className="flex gap-1 mb-4 bg-[#1a1208]/60 rounded-xl p-1 border border-[#3a3530]/40">
         <button
           onClick={() => setTab("chat")}
-          className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${tab === "chat" ? "bg-[#8b2525] text-[#e8dcc8]" : "text-[#9b7a4a] hover:text-[#d4bc8e]"}`}
+          className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${tab === "chat" ? "bg-[#3b0a0a] text-[#e8dcc8]" : "text-[#9b7a4a] hover:text-[#d4bc8e]"}`}
         >
           <img src="/images/chat.png" alt="" className="w-5 h-5 object-contain" />
           Чат с Берегиней
         </button>
         <button
           onClick={() => setTab("plans")}
-          className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${tab === "plans" ? "bg-[#8b2525] text-[#e8dcc8]" : "text-[#9b7a4a] hover:text-[#d4bc8e]"}`}
+          className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${tab === "plans" ? "bg-[#3b0a0a] text-[#e8dcc8]" : "text-[#9b7a4a] hover:text-[#d4bc8e]"}`}
         >
           <img src="/images/menu.png" alt="" className="w-5 h-5 object-contain" />
           Мои планы {plans.length > 0 && `(${plans.length})`}
