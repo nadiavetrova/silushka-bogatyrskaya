@@ -57,41 +57,41 @@ ${nutrition
 📊 ИТОГО: {число} ккал | Б:{число}г | У:{число}г | Ж:{число}г
 6. Отвечай структурировано, с разбивкой по приёмам пищи`;
 
-    // Системный промпт добавляем первым сообщением (совместимо со всеми моделями)
-    const geminiMessages = [
-      { role: "user", parts: [{ text: systemPrompt }] },
-      { role: "model", parts: [{ text: "Понял! Буду следовать всем правилам и помогать с питанием." }] },
+    const groqMessages = [
+      { role: "system", content: systemPrompt },
       ...messages.map((m: { role: string; text: string }) => ({
-        role: m.role === "ai" ? "model" : "user",
-        parts: [{ text: m.text }],
+        role: m.role === "ai" ? "assistant" : "user",
+        content: m.text,
       })),
     ];
 
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) { res.status(500).json({ message: "Gemini API не настроен на сервере" }); return; }
+    const apiKey = process.env.GROQ_API_KEY;
+    if (!apiKey) { res.status(500).json({ message: "GROQ API не настроен на сервере" }); return; }
 
-    const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: geminiMessages,
-          generationConfig: { temperature: 0.7, maxOutputTokens: 2048 },
-        }),
-      }
-    );
+    const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: "llama-3.1-8b-instant",
+        messages: groqMessages,
+        temperature: 0.7,
+        max_tokens: 2048,
+      }),
+    });
 
-    if (!geminiRes.ok) {
-      const err = await geminiRes.json().catch(() => ({}));
-      console.error("Gemini error:", JSON.stringify(err));
-      const geminiMsg = err?.error?.message || err?.message || `HTTP ${geminiRes.status}`;
-      res.status(500).json({ message: `Gemini: ${geminiMsg}` });
+    if (!groqRes.ok) {
+      const err = await groqRes.json().catch(() => ({}));
+      console.error("Groq error:", JSON.stringify(err));
+      const errMsg = err?.error?.message || `HTTP ${groqRes.status}`;
+      res.status(500).json({ message: `Groq: ${errMsg}` });
       return;
     }
 
-    const data = await geminiRes.json();
-    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    const data = await groqRes.json();
+    const reply = data.choices?.[0]?.message?.content;
     if (!reply) { res.status(500).json({ message: "Пустой ответ от ИИ" }); return; }
 
     res.json({ reply });
