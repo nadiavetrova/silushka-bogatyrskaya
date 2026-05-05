@@ -33,15 +33,57 @@ function todayIso() {
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
 }
 
-const WELCOME = `Здрава будь, богатырша! 🌿
+const ACTIVITY_COEF: Record<string, number> = {
+  sedentary: 1.2, light: 1.375, moderate: 1.55, active: 1.725, veryActive: 1.9,
+};
+const ACTIVITY_LABEL: Record<string, string> = {
+  sedentary: "сидячий", light: "слабая активность", moderate: "умеренная активность",
+  active: "высокая активность", veryActive: "очень высокая активность",
+};
 
-Я — Берегиня, твой помощник по питанию. Я вижу твои данные из профиля и рассчитаю твою норму КБЖУ сама.
+function calcKBZU(profile: { age?: number | null; height?: number | null; bodyWeight?: number | null; activityLevel?: string; gender?: string } | null) {
+  if (!profile?.age || !profile?.height || !profile?.bodyWeight) return null;
+  const genderOffset = profile.gender === "male" ? 5 : -161;
+  const bmr = 10 * profile.bodyWeight + 6.25 * profile.height - 5 * profile.age + genderOffset;
+  const coef = ACTIVITY_COEF[profile.activityLevel || "moderate"] ?? 1.55;
+  const tdee = Math.round(bmr * coef);
+  const protein = Math.round(profile.bodyWeight * 2);
+  const fat = Math.round((tdee * 0.25) / 9);
+  const carbs = Math.round((tdee - protein * 4 - fat * 9) / 4);
+  return { tdee, protein, fat, carbs };
+}
+
+function buildWelcome(profile: { name?: string; age?: number | null; height?: number | null; bodyWeight?: number | null; activityLevel?: string; gender?: string } | null) {
+  const kbzu = calcKBZU(profile);
+  const name = profile?.name ? `, ${profile.name}` : "";
+  if (kbzu) {
+    const activity = ACTIVITY_LABEL[profile?.activityLevel || "moderate"] ?? "умеренная активность";
+    return `Здрава будь, богатырша${name}! 🌿
+
+Я — Берегиня, твой помощник по питанию.
+
+📊 Твоя суточная норма (${activity}):
+🔥 Калории: ${kbzu.tdee} ккал
+🥩 Белки: ${kbzu.protein} г
+🌾 Углеводы: ${kbzu.carbs} г
+🧈 Жиры: ${kbzu.fat} г
+
+Рассчитано по формуле Миффлина–Сан Жеора на основе твоих данных из профиля.
 
 С чего начнём?
-• Напиши какие продукты есть дома — составлю меню на день с граммовками
-• Или спроси что-нибудь о питании
+• Напиши какие продукты есть дома — составлю меню с граммовками
+• Или задай любой вопрос о питании`;
+  }
+  return `Здрава будь, богатырша${name}! 🌿
 
-Также можешь нажать одну из кнопок быстрого ответа ниже 👇`;
+Я — Берегиня, твой помощник по питанию.
+
+⚠️ Чтобы рассчитать твою норму КБЖУ — заполни данные в профиле: возраст, рост, вес, пол и уровень активности.
+
+С чего начнём?
+• Напиши какие продукты есть дома — составлю меню с граммовками
+• Или задай любой вопрос о питании`;
+}
 
 const QUICK_CHIPS = [
   "Составь меню на сегодня",
@@ -54,7 +96,7 @@ const QUICK_CHIPS = [
 export default function NutritionPage() {
   const [tab, setTab] = useState<"chat" | "plans">("chat");
   const [messages, setMessages] = useState<Message[]>([
-    { role: "ai", text: WELCOME, id: "welcome" },
+    { role: "ai", text: buildWelcome(null), id: "welcome" },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -66,10 +108,21 @@ export default function NutritionPage() {
   const chatEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const clearChat = () => {
-    setMessages([{ role: "ai", text: WELCOME, id: "welcome" }]);
+  // Загружаем профиль и обновляем приветствие с КБЖУ
+  useEffect(() => {
+    api.getProfile().then((p) => {
+      setMessages([{ role: "ai", text: buildWelcome(p), id: "welcome" }]);
+    }).catch(() => {});
+  }, []);
+
+  const clearChat = useCallback(() => {
+    api.getProfile().then((p) => {
+      setMessages([{ role: "ai", text: buildWelcome(p), id: "welcome" }]);
+    }).catch(() => {
+      setMessages([{ role: "ai", text: buildWelcome(null), id: "welcome" }]);
+    });
     setSavedMsgIds(new Set());
-  };
+  }, []);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });

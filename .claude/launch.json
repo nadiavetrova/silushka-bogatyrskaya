@@ -3,15 +3,32 @@
   "configurations": [
     {
       "name": "web",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "-w", "apps/web"],
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": ["-c", "cd /Users/nadi/Documents/windGym && PATH=/usr/local/bin:$PATH /usr/local/bin/node /usr/local/lib/node_modules/npm/bin/npm-cli.js run dev -w apps/web"],
       "port": 3000
     },
     {
       "name": "landing",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["serve", "/Users/nadi/Desktop/windWeb", "-l", "3333"],
+      "runtimeExecutable": "/usr/bin/python3",
+      "runtimeArgs": ["/tmp/serve_windweb.py"],
       "port": 3333
+    },
+    {
+      "name": "tur",
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": ["-c", "cd /Users/nadi/Documents/tur && PATH=/usr/local/bin:$PATH npm run dev -- --port 3100"],
+      "port": 3100
     }
-  ]
+  ,{
+    "name": "mockup",
+    "runtimeExecutable": "/usr/bin/python3",
+    "runtimeArgs": ["/tmp/serve_mockup.py"],
+    "port": 3334
+  },
+  {
+    "name": "mockup2",
+    "runtimeExecutable": "/usr/bin/python3",
+    "runtimeArgs": ["-m", "http.server", "3336", "--directory", "/Users/nadi/Documents/windGym"],
+    "port": 3336
+  }]
 }

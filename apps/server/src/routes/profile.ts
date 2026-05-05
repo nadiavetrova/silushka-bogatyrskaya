@@ -16,6 +16,8 @@ const profileSchema = z.object({
   hips: z.number().min(0).nullable().optional(),
   biceps: z.number().min(0).nullable().optional(),
   thigh: z.number().min(0).nullable().optional(),
+  activityLevel: z.enum(["sedentary", "light", "moderate", "active", "veryActive"]).optional(),
+  gender: z.enum(["male", "female"]).optional(),
 });
 
 // GET /profile
@@ -27,7 +29,7 @@ router.get("/", async (req, res) => {
         id: true, email: true, name: true,
         age: true, height: true, bodyWeight: true,
         chest: true, waist: true, hips: true,
-        biceps: true, thigh: true,
+        biceps: true, thigh: true, activityLevel: true, gender: true,
         createdAt: true,
       },
     });
@@ -49,7 +51,7 @@ router.put("/", async (req, res) => {
         id: true, email: true, name: true,
         age: true, height: true, bodyWeight: true,
         chest: true, waist: true, hips: true,
-        biceps: true, thigh: true,
+        biceps: true, thigh: true, activityLevel: true, gender: true,
       },
     });
     res.json(user);

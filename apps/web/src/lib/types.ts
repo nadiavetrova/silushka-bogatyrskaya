@@ -28,6 +28,9 @@ export interface UserData {
   emailVerified?: boolean;
 }
 
+export type ActivityLevel = "sedentary" | "light" | "moderate" | "active" | "veryActive";
+export type Gender = "male" | "female";
+
 export interface ProfileData {
   id: string;
   email: string;
@@ -40,6 +43,8 @@ export interface ProfileData {
   hips: number | null;
   biceps: number | null;
   thigh: number | null;
+  activityLevel: ActivityLevel;
+  gender: Gender;
   createdAt: string;
 }
 
@@ -53,6 +58,8 @@ export interface UpdateProfileRequest {
   hips?: number | null;
   biceps?: number | null;
   thigh?: number | null;
+  activityLevel?: ActivityLevel;
+  gender?: Gender;
 }
 
 export interface MeasurementData {

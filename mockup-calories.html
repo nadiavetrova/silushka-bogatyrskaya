@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Силушка — Трапезная</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #111210;
+    font-family: 'Inter', sans-serif;
+    color: #e8dcc8;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  .app { width: 100%; max-width: 420px; min-height: 100vh; display: flex; flex-direction: column; position: relative; background: #111210; }
+
+  /* ===== TABS ===== */
+  .top-tabs {
+    position: sticky; top: 0; z-index: 20;
+    background: rgba(17,18,16,0.97);
+    border-bottom: 2px solid rgba(139,37,37,0.3);
+  }
+  .header-top {
+    padding: 12px 16px 8px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .header-title { font-family:'Cinzel',serif; font-size:16px; color:#d4bc8e; }
+  .ai-badge {
+    background: rgba(139,37,37,0.25); border:1px solid rgba(139,37,37,0.4);
+    color:#a83232; font-size:9px; padding:2px 8px; border-radius:20px; font-weight:700; letter-spacing:0.5px;
+  }
+  .tabs { display:flex; padding: 0 16px; gap: 4px; }
+  .tab {
+    flex:1; text-align:center; padding:8px 4px; font-size:12px; font-weight:600;
+    color:#9b7a4a; border-bottom:2px solid transparent; cursor:pointer; transition: all 0.2s;
+  }
+  .tab.active { color:#d4bc8e; border-bottom-color:#8b2525; }
+
+  /* ===== SCREEN SWITCHER ===== */
+  .screen { display:none; flex-direction:column; flex:1; }
+  .screen.active { display:flex; }
+
+  /* ===== CHAT SCREEN ===== */
+  .chat-area {
+    flex:1; overflow-y:auto; padding:14px 14px 230px;
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .sys-msg { text-align:center; font-size:10px; color:#7a5c35; padding:4px 0; }
+
+  .msg { display:flex; gap:9px; }
+  .msg.user { flex-direction:row-reverse; }
+  .avatar {
+    width:30px; height:30px; border-radius:50%; display:flex; align-items:center;
+    justify-content:center; font-size:14px; flex-shrink:0;
+    border:1.5px solid rgba(122,92,53,0.4); background:rgba(42,31,15,0.8);
+  }
+  .bubble {
+    max-width:calc(100% - 44px); border-radius:16px; padding:11px 14px;
+    font-size:13px; line-height:1.55;
+  }
+  .bubble.ai {
+    background:linear-gradient(135deg,rgba(42,31,15,0.95),rgba(26,18,8,0.98));
+    border:1px solid rgba(122,92,53,0.35); border-top-left-radius:4px; color:#e8dcc8;
+  }
+  .bubble.user {
+    background:linear-gradient(135deg,rgba(26,50,26,0.7),rgba(18,36,18,0.8));
+    border:1px solid rgba(94,163,82,0.25); border-top-right-radius:4px; color:#d4e8d0;
+  }
+  .msg-time { font-size:9px; color:#7a5c35; margin-top:4px; padding:0 4px; }
+  .msg.user .msg-time { text-align:right; }
+
+  /* Plan card in chat */
+  .plan-card {
+    margin-top:10px; border:1px solid rgba(122,92,53,0.4); border-radius:12px; overflow:hidden;
+  }
+  .plan-card-header {
+    background:rgba(139,37,37,0.2); padding:8px 12px;
+    display:flex; justify-content:space-between; align-items:center;
+    font-family:'Cinzel',serif; font-size:11px; color:#a83232;
+  }
+  .meal-row { padding:9px 12px; border-bottom:1px solid rgba(58,53,48,0.4); display:flex; gap:8px; }
+  .meal-row:last-of-type { border-bottom:none; }
+  .meal-label { font-size:9px; color:#a83232; font-weight:700; width:44px; flex-shrink:0; padding-top:1px; }
+  .meal-foods { flex:1; }
+  .food-name { font-size:12px; color:#e8dcc8; line-height:1.4; }
+  .food-gram { font-size:10px; color:#9b7a4a; }
+  .meal-kcal { font-size:11px; font-weight:700; color:#d4bc8e; align-self:center; flex-shrink:0;
+    background:rgba(42,31,15,0.8); padding:3px 7px; border-radius:6px; }
+  .plan-totals {
+    background:rgba(42,31,15,0.8); padding:8px 12px;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .plan-totals-val { font-size:13px; font-weight:700; color:#d4bc8e; }
+  .plan-totals-lbl { font-size:9px; color:#9b7a4a; }
+  .macros-row { display:flex; gap:6px; }
+  .mchip {
+    font-size:10px; padding:2px 7px; border-radius:10px; font-weight:600;
+  }
+  .mchip.p { background:rgba(94,163,82,0.2); color:#5ea352; }
+  .mchip.c { background:rgba(212,188,142,0.15); color:#d4bc8e; }
+  .mchip.f { background:rgba(184,154,106,0.15); color:#b89a6a; }
+
+  /* Save button */
+  .save-plan-btn {
+    display:flex; align-items:center; justify-content:center; gap:7px;
+    margin-top:12px; padding:11px 16px;
+    background:linear-gradient(135deg,#8b2525,#a83232);
+    border:none; border-radius:10px; color:#e8dcc8;
+    font-size:13px; font-weight:700; font-family:'Cinzel',serif;
+    cursor:pointer; width:100%; transition: opacity 0.2s;
+    letter-spacing:0.3px;
+  }
+  .save-plan-btn:hover { opacity:0.85; }
+  .save-plan-btn.saved {
+    background:linear-gradient(135deg,#1a4a1a,#2a6b2a);
+    border:1px solid rgba(94,163,82,0.4);
+  }
+
+  /* Updated badge */
+  .upd-badge {
+    display:inline-block; background:rgba(139,37,37,0.25);
+    border:1px solid rgba(139,37,37,0.4); color:#a83232;
+    font-size:9px; padding:2px 7px; border-radius:10px; margin-bottom:8px; font-weight:700;
+  }
+  .change-row {
+    background:rgba(139,37,37,0.1); border-left:3px solid #8b2525;
+    padding:6px 10px; border-radius:0 6px 6px 0; margin:5px 0; font-size:12px;
+  }
+  .dot-typing { display:flex; gap:4px; padding:4px 0; }
+  .dt { width:6px;height:6px;background:#9b7a4a;border-radius:50%;animation:bk 1.2s infinite; }
+  .dt:nth-child(2){animation-delay:.2s;} .dt:nth-child(3){animation-delay:.4s;}
+  @keyframes bk{0%,80%,100%{transform:translateY(0);opacity:.4;}40%{transform:translateY(-5px);opacity:1;}}
+
+  /* Chat input */
+  .chat-input-wrap {
+    position:fixed; bottom:0; left:50%; transform:translateX(-50%);
+    width:100%; max-width:420px; z-index:15;
+    background:rgba(17,18,16,0.98); border-top:1px solid rgba(58,53,48,0.5);
+  }
+  .quick-chips {
+    display:flex; gap:6px; padding:8px 12px 0; overflow-x:auto; scrollbar-width:none;
+  }
+  .quick-chips::-webkit-scrollbar{display:none;}
+  .chip {
+    flex-shrink:0; background:rgba(42,31,15,0.9); border:1px solid rgba(122,92,53,0.35);
+    border-radius:20px; padding:5px 11px; font-size:11px; color:#b89a6a; cursor:pointer;
+    white-space:nowrap;
+  }
+  .input-row { display:flex; gap:8px; padding:8px 12px 14px; align-items:flex-end; }
+  .chat-ta {
+    flex:1; background:rgba(21,20,18,0.9); border:1.5px solid rgba(122,92,53,0.4);
+    border-radius:20px; padding:10px 16px; color:#e8dcc8; font-size:13px;
+    font-family:'Inter',sans-serif; outline:none; resize:none; min-height:40px; max-height:100px;
+  }
+  .chat-ta::placeholder { color:rgba(155,122,74,0.5); }
+  .send-btn {
+    width:40px;height:40px; background:linear-gradient(135deg,#8b2525,#a83232);
+    border:none; border-radius:50%; color:#e8dcc8; font-size:18px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+
+  /* ===== MY PLANS SCREEN ===== */
+  .plans-area { flex:1; overflow-y:auto; padding:14px 14px 100px; display:flex; flex-direction:column; gap:12px; }
+
+  .plans-header-card {
+    background:linear-gradient(135deg,rgba(139,37,37,0.2),rgba(42,31,15,0.9));
+    border:1px solid rgba(139,37,37,0.3); border-radius:14px; padding:16px;
+    text-align:center;
+  }
+  .plans-header-card h3 { font-family:'Cinzel',serif; font-size:15px; color:#d4bc8e; margin-bottom:4px; }
+  .plans-header-card p { font-size:11px; color:#9b7a4a; line-height:1.5; }
+
+  .plan-item {
+    background:linear-gradient(135deg,rgba(42,31,15,0.9),rgba(26,18,8,0.95));
+    border:1px solid rgba(122,92,53,0.35); border-radius:14px; overflow:hidden;
+    cursor:pointer; transition: border-color 0.2s;
+  }
+  .plan-item:hover { border-color:rgba(139,37,37,0.5); }
+  .plan-item-header {
+    padding:12px 14px; display:flex; align-items:center; gap:12px;
+    border-bottom:1px solid rgba(58,53,48,0.4);
+  }
+  .plan-date-badge {
+    background:rgba(139,37,37,0.2); border:1px solid rgba(139,37,37,0.3);
+    border-radius:10px; padding:6px 10px; text-align:center; flex-shrink:0;
+  }
+  .plan-date-day { font-family:'Cinzel',serif; font-size:18px; color:#d4bc8e; line-height:1; }
+  .plan-date-mon { font-size:9px; color:#9b7a4a; margin-top:2px; }
+  .plan-info { flex:1; min-width:0; }
+  .plan-title { font-size:13px; font-weight:700; color:#e8dcc8; margin-bottom:3px; }
+  .plan-meta { font-size:11px; color:#9b7a4a; }
+  .plan-kcal { font-size:18px; font-weight:700; color:#d4bc8e; }
+  .plan-kcal span { font-size:9px; color:#9b7a4a; font-weight:400; }
+  .plan-item-body { padding:10px 14px; display:flex; gap:8px; flex-wrap:wrap; }
+  .plan-meal-chip {
+    font-size:10px; padding:4px 10px; border-radius:20px;
+    background:rgba(58,53,48,0.5); color:#9b7a4a; border:1px solid rgba(58,53,48,0.6);
+  }
+  .plan-item-footer {
+    padding:10px 14px; display:flex; gap:8px;
+    border-top:1px solid rgba(58,53,48,0.3);
+  }
+  .plan-action-btn {
+    flex:1; padding:8px; border-radius:8px; font-size:11px; font-weight:600;
+    cursor:pointer; text-align:center; transition:all 0.2s;
+  }
+  .btn-view { background:rgba(42,31,15,0.8); border:1px solid rgba(122,92,53,0.4); color:#b89a6a; }
+  .btn-edit { background:linear-gradient(135deg,rgba(139,37,37,0.3),rgba(139,37,37,0.15)); border:1px solid rgba(139,37,37,0.4); color:#a83232; }
+  .btn-new-plan {
+    width:100%; padding:14px; background:linear-gradient(135deg,#8b2525,#a83232);
+    border:none; border-radius:12px; color:#e8dcc8;
+    font-family:'Cinzel',serif; font-size:14px; font-weight:700;
+    cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+
+  /* ===== PLAN DETAIL SCREEN ===== */
+  .plan-detail-area { flex:1; overflow-y:auto; padding:14px 14px 100px; display:flex; flex-direction:column; gap:12px; }
+  .back-btn {
+    display:flex; align-items:center; gap:6px; font-size:12px; color:#9b7a4a;
+    cursor:pointer; padding:2px 0 10px;
+  }
+  .back-btn:hover { color:#d4bc8e; }
+  .detail-header {
+    background:linear-gradient(135deg,rgba(139,37,37,0.2),rgba(42,31,15,0.9));
+    border:1px solid rgba(139,37,37,0.3); border-radius:14px; padding:16px;
+  }
+  .detail-title { font-family:'Cinzel',serif; font-size:17px; color:#d4bc8e; margin-bottom:4px; }
+  .detail-date { font-size:11px; color:#9b7a4a; margin-bottom:12px; }
+  .detail-macros { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:8px; }
+  .detail-macro { text-align:center; background:rgba(42,31,15,0.8); border-radius:10px; padding:8px 6px; border:1px solid rgba(122,92,53,0.2); }
+  .detail-macro-val { font-size:16px; font-weight:700; color:#d4bc8e; }
+  .detail-macro-lbl { font-size:8px; color:#9b7a4a; margin-top:2px; }
+
+  .full-plan-card { border:1px solid rgba(122,92,53,0.35); border-radius:12px; overflow:hidden; }
+  .full-plan-title { font-family:'Cinzel',serif; font-size:12px; color:#a83232; padding:10px 14px; background:rgba(139,37,37,0.15); border-bottom:1px solid rgba(58,53,48,0.4); }
+
+  .detail-actions { display:flex; gap:10px; }
+  .detail-action {
+    flex:1; padding:12px; border-radius:12px; font-size:13px; font-weight:700;
+    cursor:pointer; text-align:center; font-family:'Cinzel',serif;
+  }
+  .da-edit { background:linear-gradient(135deg,#8b2525,#a83232); border:none; color:#e8dcc8; }
+  .da-copy { background:rgba(42,31,15,0.9); border:1px solid rgba(122,92,53,0.4); color:#b89a6a; }
+
+  .ai-edit-suggestion {
+    background:rgba(42,31,15,0.6); border:1px solid rgba(122,92,53,0.3); border-radius:12px; padding:14px;
+  }
+  .ai-edit-title { font-size:11px; color:#a83232; font-weight:700; margin-bottom:8px; display:flex; gap:6px; align-items:center; }
+  .suggestion-chips { display:flex; gap:6px; flex-wrap:wrap; }
+  .sug-chip {
+    background:rgba(58,53,48,0.6); border:1px solid rgba(122,92,53,0.3);
+    border-radius:20px; padding:6px 12px; font-size:11px; color:#b89a6a; cursor:pointer;
+  }
+  .sug-chip:hover { border-color:rgba(139,37,37,0.5); color:#d4bc8e; }
+
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- TOP TABS -->
+  <div class="top-tabs">
+    <div class="header-top">
+      <div class="header-title">🍽️ Богатырская Трапеза</div>
+      <span class="ai-badge">✦ ИИ</span>
+    </div>
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('chat')">💬 Чат с Берегиней</div>
+      <div class="tab" onclick="switchTab('plans')">📋 Мои планы</div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN 1: CHAT ===== -->
+  <div class="screen active" id="screen-chat">
+    <div class="chat-area">
+
+      <div class="sys-msg">— Начало беседы · 21 апреля —</div>
+
+      <!-- User 1 -->
+      <div class="msg user">
+        <div class="avatar">👤</div>
+        <div>
+          <div class="bubble user">Привет! Составь мне меню на сегодня. Продукты: яйца, овсянка, куриное филе, гречка, творог, брокколи, оливковое масло. Хочу ~2200 ккал, белка побольше.</div>
+          <div class="msg-time">09:12</div>
+        </div>
+      </div>
+
+      <!-- AI 1 — with plan + save button -->
+      <div class="msg">
+        <div class="avatar">🌿</div>
+        <div style="flex:1; min-width:0;">
+          <div class="bubble ai">
+            Здрава будь, богатырша! 💪 Составила тебе меню:
+
+            <div class="plan-card">
+              <div class="plan-card-header">
+                <span>✦ Меню на 21 апреля</span>
+                <span style="font-size:10px; color:#9b7a4a;">2 195 ккал</span>
+              </div>
+              <div class="meal-row">
+                <div class="meal-label">☀️ 08:00</div>
+                <div class="meal-foods">
+                  <div class="food-name">Овсянка на воде</div><div class="food-gram">60 г</div>
+                  <div class="food-name" style="margin-top:4px;">Яичница</div><div class="food-gram">3 яйца · масло 1 ч.л.</div>
+                </div>
+                <div class="meal-kcal">487 ккал</div>
+              </div>
+              <div class="meal-row">
+                <div class="meal-label">🌿 11:00</div>
+                <div class="meal-foods">
+                  <div class="food-name">Творог 5%</div><div class="food-gram">200 г</div>
+                </div>
+                <div class="meal-kcal">180 ккал</div>
+              </div>
+              <div class="meal-row">
+                <div class="meal-label">☀️ 13:30</div>
+                <div class="meal-foods">
+                  <div class="food-name">Куриное филе запечённое</div><div class="food-gram">250 г</div>
+                  <div class="food-name" style="margin-top:4px;">Гречка варёная</div><div class="food-gram">200 г (80 г сухой)</div>
+                  <div class="food-name" style="margin-top:4px;">Брокколи</div><div class="food-gram">150 г · масло 1 ч.л.</div>
+                </div>
+                <div class="meal-kcal">720 ккал</div>
+              </div>
+              <div class="meal-row">
+                <div class="meal-label">🌙 19:00</div>
+                <div class="meal-foods">
+                  <div class="food-name">Куриное филе</div><div class="food-gram">200 г</div>
+                  <div class="food-name" style="margin-top:4px;">Брокколи с маслом</div><div class="food-gram">200 г · масло 1 ч.л.</div>
+                  <div class="food-name" style="margin-top:4px;">Творог</div><div class="food-gram">100 г</div>
+                </div>
+                <div class="meal-kcal">563 ккал</div>
+              </div>
+              <div class="meal-row">
+                <div class="meal-label">🌛 21:30</div>
+                <div class="meal-foods">
+                  <div class="food-name">Творог + 1 яйцо</div><div class="food-gram">100 г творога</div>
+                </div>
+                <div class="meal-kcal">189 ккал</div>
+              </div>
+              <div class="plan-totals">
+                <div><div class="plan-totals-val">2 139 ккал</div><div class="plan-totals-lbl">итого</div></div>
+                <div class="macros-row">
+                  <div class="mchip p">Б: 178г</div>
+                  <div class="mchip c">У: 162г</div>
+                  <div class="mchip f">Ж: 52г</div>
+                </div>
+              </div>
+            </div>
+
+            <button class="save-plan-btn" id="save-btn-1" onclick="savePlan(this)">
+              📋 Сохранить план
+            </button>
+
+            <div style="margin-top:10px; font-size:12px; color:#9b7a4a;">
+              Если что-то нужно изменить — просто скажи! 🙂
+            </div>
+          </div>
+          <div class="msg-time">09:13</div>
+        </div>
+      </div>
+
+      <!-- User 2 -->
+      <div class="msg user">
+        <div class="avatar">👤</div>
+        <div>
+          <div class="bubble user">Убери гречку из обеда, добавь вместо неё рис</div>
+          <div class="msg-time">09:18</div>
+        </div>
+      </div>
+
+      <!-- AI 2 — updated plan -->
+      <div class="msg">
+        <div class="avatar">🌿</div>
+        <div style="flex:1; min-width:0;">
+          <div class="bubble ai">
+            <div class="upd-badge">↻ Меню обновлено</div>
+
+            Заменила гречку на рис в обеде:
+
+            <div class="change-row">
+              <span style="color:#a83232; font-weight:700;">✕ Убрала:</span> Гречка варёная 200 г → <span style="color:#9b7a4a;">-236 ккал</span>
+            </div>
+            <div class="change-row" style="border-color:#5ea352; background:rgba(94,163,82,0.08);">
+              <span style="color:#5ea352; font-weight:700;">✓ Добавила:</span> Рис варёный 200 г → <span style="color:#9b7a4a;">+260 ккал</span>
+            </div>
+
+            <div class="plan-card" style="margin-top:10px;">
+              <div class="plan-card-header">
+                <span>✦ Меню на 21 апреля (v2)</span>
+                <span style="font-size:10px; color:#9b7a4a;">2 163 ккал</span>
+              </div>
+              <div class="meal-row">
+                <div class="meal-label">☀️ 08:00</div>
+                <div class="meal-foods"><div class="food-name">Овсянка + яичница (3 яйца)</div><div class="food-gram">без изменений</div></div>
+                <div class="meal-kcal">487 ккал</div>
+              </div>
+              <div class="meal-row">
+                <div class="meal-label">🌿 11:00</div>
+                <div class="meal-foods"><div class="food-name">Творог 5%</div><div class="food-gram">без изменений</div></div>
+                <div class="meal-kcal">180 ккал</div>
+              </div>
+              <div class="meal-row" style="background:rgba(94,163,82,0.05);">
+                <div class="meal-label">☀️ 13:30</div>
+                <div class="meal-foods">
+                  <div class="food-name">Куриное филе</div><div class="food-gram">250 г</div>
+                  <div class="food-name" style="margin-top:4px; color:#5ea352;">Рис варёный ← изменено</div><div class="food-gram">200 г (80 г сухого)</div>
+                  <div class="food-name" style="margin-top:4px;">Брокколи</div><div class="food-gram">150 г</div>
+                </div>
+                <div class="meal-kcal">744 ккал</div>
+              </div>
+              <div class="meal-row">
+                <div class="meal-label">🌙 19:00</div>
+                <div class="meal-foods"><div class="food-name">Курица + брокколи + творог</div><div class="food-gram">без изменений</div></div>
+                <div class="meal-kcal">563 ккал</div>
+              </div>
+              <div class="meal-row">
+                <div class="meal-label">🌛 21:30</div>
+                <div class="meal-foods"><div class="food-name">Творог + яйцо</div><div class="food-gram">без изменений</div></div>
+                <div class="meal-kcal">189 ккал</div>
+              </div>
+              <div class="plan-totals">
+                <div><div class="plan-totals-val">2 163 ккал</div><div class="plan-totals-lbl">итого</div></div>
+                <div class="macros-row">
+                  <div class="mchip p">Б: 175г</div>
+                  <div class="mchip c">У: 171г</div>
+                  <div class="mchip f">Ж: 52г</div>
+                </div>
+              </div>
+            </div>
+
+            <button class="save-plan-btn" id="save-btn-2" onclick="savePlan(this)">
+              📋 Сохранить план
+            </button>
+          </div>
+          <div class="msg-time">09:18</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Chat input -->
+    <div class="chat-input-wrap">
+      <div class="quick-chips">
+        <div class="chip">🍫 Добавила перекус</div>
+        <div class="chip">🔄 Пересчитай</div>
+        <div class="chip">📊 Итоги дня</div>
+        <div class="chip">🛒 Другие продукты</div>
+      </div>
+      <div class="input-row">
+        <textarea class="chat-ta" placeholder="Напиши Берегине..." rows="1"></textarea>
+        <button class="send-btn">↑</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCREEN 2: MY PLANS ===== -->
+  <div class="screen" id="screen-plans">
+    <div class="plans-area">
+
+      <div class="plans-header-card">
+        <h3>📋 Мои планы питания</h3>
+        <p style="margin-top:6px;">Сохранённые меню от Берегини.<br>Открой любой — отредактируй через ИИ.</p>
+      </div>
+
+      <button class="btn-new-plan" onclick="switchTab('chat')">
+        ✦ Новый план с Берегиней
+      </button>
+
+      <!-- Plan item 1 -->
+      <div class="plan-item" onclick="switchTab('detail')">
+        <div class="plan-item-header">
+          <div class="plan-date-badge">
+            <div class="plan-date-day">21</div>
+            <div class="plan-date-mon">апр</div>
+          </div>
+          <div class="plan-info">
+            <div class="plan-title">Меню на 21 апреля (v2)</div>
+            <div class="plan-meta">5 приёмов пищи · с рисом</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="plan-kcal">2163 <span>ккал</span></div>
+            <div style="font-size:9px; color:#5ea352; margin-top:2px;">● Текущий</div>
+          </div>
+        </div>
+        <div class="plan-item-body">
+          <div class="plan-meal-chip">☀️ Завтрак 487 ккал</div>
+          <div class="plan-meal-chip">🌿 Перекус 180 ккал</div>
+          <div class="plan-meal-chip">☀️ Обед 744 ккал</div>
+          <div class="plan-meal-chip">🌙 Ужин 563 ккал</div>
+          <div class="plan-meal-chip">🌛 Поздний 189 ккал</div>
+        </div>
+        <div class="plan-item-footer">
+          <div class="plan-action-btn btn-view" onclick="event.stopPropagation(); switchTab('detail')">👁 Просмотр</div>
+          <div class="plan-action-btn btn-edit" onclick="event.stopPropagation(); switchTab('chat')">✏️ Редактировать с ИИ</div>
+        </div>
+      </div>
+
+      <!-- Plan item 2 -->
+      <div class="plan-item">
+        <div class="plan-item-header">
+          <div class="plan-date-badge">
+            <div class="plan-date-day">18</div>
+            <div class="plan-date-mon">апр</div>
+          </div>
+          <div class="plan-info">
+            <div class="plan-title">Меню на 18 апреля</div>
+            <div class="plan-meta">4 приёма пищи · с гречкой</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="plan-kcal">2050 <span>ккал</span></div>
+            <div style="font-size:9px; color:#9b7a4a; margin-top:2px;">3 дня назад</div>
+          </div>
+        </div>
+        <div class="plan-item-body">
+          <div class="plan-meal-chip">☀️ Завтрак 420 ккал</div>
+          <div class="plan-meal-chip">☀️ Обед 680 ккал</div>
+          <div class="plan-meal-chip">🌙 Ужин 590 ккал</div>
+          <div class="plan-meal-chip">🌛 Поздний 160 ккал</div>
+        </div>
+        <div class="plan-item-footer">
+          <div class="plan-action-btn btn-view">👁 Просмотр</div>
+          <div class="plan-action-btn btn-edit" onclick="event.stopPropagation(); switchTab('chat')">✏️ Редактировать с ИИ</div>
+        </div>
+      </div>
+
+      <!-- Plan item 3 -->
+      <div class="plan-item">
+        <div class="plan-item-header">
+          <div class="plan-date-badge">
+            <div class="plan-date-day">14</div>
+            <div class="plan-date-mon">апр</div>
+          </div>
+          <div class="plan-info">
+            <div class="plan-title">Меню на 14 апреля</div>
+            <div class="plan-meta">5 приёмов пищи · без глютена</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="plan-kcal">1980 <span>ккал</span></div>
+            <div style="font-size:9px; color:#9b7a4a; margin-top:2px;">7 дней назад</div>
+          </div>
+        </div>
+        <div class="plan-item-body">
+          <div class="plan-meal-chip">☀️ Завтрак 390 ккал</div>
+          <div class="plan-meal-chip">🌿 Перекус 150 ккал</div>
+          <div class="plan-meal-chip">☀️ Обед 640 ккал</div>
+          <div class="plan-meal-chip">🌙 Ужин 530 ккал</div>
+          <div class="plan-meal-chip">🌛 Поздний 170 ккал</div>
+        </div>
+        <div class="plan-item-footer">
+          <div class="plan-action-btn btn-view">👁 Просмотр</div>
+          <div class="plan-action-btn btn-edit" onclick="event.stopPropagation(); switchTab('chat')">✏️ Редактировать с ИИ</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== SCREEN 3: PLAN DETAIL ===== -->
+  <div class="screen" id="screen-detail">
+    <div class="plan-detail-area">
+
+      <div class="back-btn" onclick="switchTab('plans')">‹ Мои планы</div>
+
+      <div class="detail-header">
+        <div class="detail-title">Меню на 21 апреля (v2)</div>
+        <div class="detail-date">Сохранено сегодня в 09:18 · с рисом</div>
+        <div class="detail-macros">
+          <div class="detail-macro">
+            <div class="detail-macro-val" style="color:#d4bc8e;">2163</div>
+            <div class="detail-macro-lbl">ккал</div>
+          </div>
+          <div class="detail-macro">
+            <div class="detail-macro-val" style="color:#5ea352;">175г</div>
+            <div class="detail-macro-lbl">белки</div>
+          </div>
+          <div class="detail-macro">
+            <div class="detail-macro-val" style="color:#d4bc8e;">171г</div>
+            <div class="detail-macro-lbl">углев.</div>
+          </div>
+          <div class="detail-macro">
+            <div class="detail-macro-val" style="color:#b89a6a;">52г</div>
+            <div class="detail-macro-lbl">жиры</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="full-plan-card">
+        <div class="full-plan-title">✦ Полное меню</div>
+        <div class="meal-row">
+          <div class="meal-label">☀️ 08:00</div>
+          <div class="meal-foods">
+            <div class="food-name">Овсянка на воде — 60 г</div>
+            <div class="food-name">Яичница — 3 яйца, масло 1 ч.л.</div>
+          </div>
+          <div class="meal-kcal">487 ккал</div>
+        </div>
+        <div class="meal-row">
+          <div class="meal-label">🌿 11:00</div>
+          <div class="meal-foods"><div class="food-name">Творог 5% — 200 г</div></div>
+          <div class="meal-kcal">180 ккал</div>
+        </div>
+        <div class="meal-row">
+          <div class="meal-label">☀️ 13:30</div>
+          <div class="meal-foods">
+            <div class="food-name">Куриное филе запечённое — 250 г</div>
+            <div class="food-name">Рис варёный — 200 г</div>
+            <div class="food-name">Брокколи — 150 г, масло 1 ч.л.</div>
+          </div>
+          <div class="meal-kcal">744 ккал</div>
+        </div>
+        <div class="meal-row">
+          <div class="meal-label">🌙 19:00</div>
+          <div class="meal-foods">
+            <div class="food-name">Куриное филе — 200 г</div>
+            <div class="food-name">Брокколи с маслом — 200 г</div>
+            <div class="food-name">Творог — 100 г</div>
+          </div>
+          <div class="meal-kcal">563 ккал</div>
+        </div>
+        <div class="meal-row" style="border-bottom:none;">
+          <div class="meal-label">🌛 21:30</div>
+          <div class="meal-foods"><div class="food-name">Творог + яйцо вкрутую — 100 г</div></div>
+          <div class="meal-kcal">189 ккал</div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="detail-actions">
+        <button class="detail-action da-edit" onclick="switchTab('chat')">✏️ Изменить с ИИ</button>
+        <button class="detail-action da-copy">📋 Скопировать план</button>
+      </div>
+
+      <!-- AI edit suggestions -->
+      <div class="ai-edit-suggestion">
+        <div class="ai-edit-title">🌿 Берегиня предлагает:</div>
+        <div class="suggestion-chips">
+          <div class="sug-chip" onclick="switchTab('chat')">Уменьши калории до 1800</div>
+          <div class="sug-chip" onclick="switchTab('chat')">Добавь больше овощей</div>
+          <div class="sug-chip" onclick="switchTab('chat')">Убери поздний ужин</div>
+          <div class="sug-chip" onclick="switchTab('chat')">Пересчитай на другие продукты</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+
+  if (tab === 'chat') {
+    document.querySelectorAll('.tab')[0].classList.add('active');
+    document.getElementById('screen-chat').classList.add('active');
+  } else if (tab === 'plans') {
+    document.querySelectorAll('.tab')[1].classList.add('active');
+    document.getElementById('screen-plans').classList.add('active');
+  } else if (tab === 'detail') {
+    document.querySelectorAll('.tab')[1].classList.add('active');
+    document.getElementById('screen-detail').classList.add('active');
+  }
+}
+
+function savePlan(btn) {
+  btn.innerHTML = '✓ План сохранён!';
+  btn.classList.add('saved');
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.innerHTML = '✓ Смотри в «Мои планы»';
+  }, 1500);
+}
+</script>
+</body>
+</html>

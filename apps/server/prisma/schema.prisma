@@ -20,6 +20,8 @@ model User {
   hips       Float?
   biceps     Float?
   thigh      Float?
+  activityLevel             String    @default("moderate")
+  gender                    String    @default("female")
   emailVerified             Boolean   @default(false)
   verificationCode          String?
   verificationCodeExpiresAt DateTime?

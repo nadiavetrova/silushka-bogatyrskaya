@@ -34,6 +34,8 @@ export default function ProfilePage() {
   const [hips, setHips] = useState("");
   const [biceps, setBiceps] = useState("");
   const [thigh, setThigh] = useState("");
+  const [activityLevel, setActivityLevel] = useState("moderate");
+  const [gender, setGender] = useState("female");
 
   useEffect(() => {
     api.getProfile().then((p) => {
@@ -47,6 +49,8 @@ export default function ProfilePage() {
       setHips(p.hips ? String(p.hips) : "");
       setBiceps(p.biceps ? String(p.biceps) : "");
       setThigh(p.thigh ? String(p.thigh) : "");
+      setActivityLevel(p.activityLevel || "moderate");
+      setGender(p.gender || "female");
       setLoading(false);
     }).catch(() => setLoading(false));
     api.getMeasurements().then(setMeasurements).catch(() => {});
@@ -102,6 +106,56 @@ export default function ProfilePage() {
         </div>
       )}
 
+      {/* Gender */}
+      <div className="mb-4">
+        <label className="text-[#9b7a4a] text-[10px] block mb-2">Пол</label>
+        <div className="flex gap-2">
+          {[
+            { value: "female", label: "👩 Женщина" },
+            { value: "male", label: "👨 Мужчина" },
+          ].map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => setGender(opt.value)}
+              className={`flex-1 py-2.5 rounded-xl border text-sm font-medium transition-all ${
+                gender === opt.value
+                  ? "bg-[#3b0a0a] border-[#8b2525]/60 text-[#e8dcc8]"
+                  : "bg-[#1a1918]/95 border-[#3a3530]/50 text-[#9b7a4a] hover:border-[#7a5c35]/50"
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Activity level */}
+      <div className="mb-4">
+        <label className="text-[#9b7a4a] text-[10px] block mb-2">Уровень активности</label>
+        <div className="space-y-2">
+          {[
+            { value: "sedentary", label: "🛋 Сидячий", desc: "Офис, почти нет спорта" },
+            { value: "light", label: "🚶 Слабый", desc: "1-2 тренировки в неделю" },
+            { value: "moderate", label: "🏃 Умеренный", desc: "3-5 тренировок в неделю" },
+            { value: "active", label: "💪 Высокий", desc: "6-7 тренировок в неделю" },
+            { value: "veryActive", label: "🔥 Очень высокий", desc: "Физический труд + спорт" },
+          ].map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => setActivityLevel(opt.value)}
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl border text-left transition-all ${
+                activityLevel === opt.value
+                  ? "bg-[#3b0a0a] border-[#8b2525]/60 text-[#e8dcc8]"
+                  : "bg-[#1a1918]/95 border-[#3a3530]/50 text-[#9b7a4a] hover:border-[#7a5c35]/50"
+              }`}
+            >
+              <span className="text-sm font-medium">{opt.label}</span>
+              <span className="text-[10px] opacity-70">{opt.desc}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Form fields */}
       <div className="space-y-3">
         {fields.map((f) => (
@@ -148,6 +202,8 @@ export default function ProfilePage() {
               hips: hips ? parseFloat(hips) : null,
               biceps: biceps ? parseFloat(biceps) : null,
               thigh: thigh ? parseFloat(thigh) : null,
+              activityLevel: activityLevel as import("@/lib/types").ActivityLevel,
+              gender: gender as import("@/lib/types").Gender,
             };
             await api.updateProfile(data);
             if (name) localStorage.setItem("userName", name);

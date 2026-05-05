@@ -6,11 +6,31 @@ import { authMiddleware } from "../middleware/auth";
 const router = Router();
 router.use(authMiddleware);
 
-// Расчёт КБЖУ по формуле Миффлина-Сент-Жора
-function calculateNutrition(age: number | null, height: number | null, weight: number | null) {
+const ACTIVITY_COEFFICIENTS: Record<string, number> = {
+  sedentary: 1.2,
+  light: 1.375,
+  moderate: 1.55,
+  active: 1.725,
+  veryActive: 1.9,
+};
+
+const ACTIVITY_LABELS: Record<string, string> = {
+  sedentary: "сидячий образ жизни",
+  light: "слабая активность (1-2 тренировки)",
+  moderate: "умеренная активность (3-5 тренировок)",
+  active: "высокая активность (6-7 тренировок)",
+  veryActive: "очень высокая активность (физический труд + спорт)",
+};
+
+// Расчёт КБЖУ по формуле Миффлина-Сан Жеора
+// Мужчины: 10*вес + 6.25*рост - 5*возраст + 5
+// Женщины: 10*вес + 6.25*рост - 5*возраст - 161
+function calculateNutrition(age: number | null, height: number | null, weight: number | null, activityLevel: string | null, gender: string | null) {
   if (!age || !height || !weight) return null;
-  const bmr = 10 * weight + 6.25 * height - 5 * age - 78;
-  const tdee = Math.round(bmr * 1.55);
+  const genderOffset = (gender === "male") ? 5 : -161;
+  const bmr = 10 * weight + 6.25 * height - 5 * age + genderOffset;
+  const coef = ACTIVITY_COEFFICIENTS[activityLevel || "moderate"] ?? 1.55;
+  const tdee = Math.round(bmr * coef);
   const protein = Math.round(weight * 2);
   const fat = Math.round((tdee * 0.25) / 9);
   const carbs = Math.round((tdee - protein * 4 - fat * 9) / 4);
@@ -28,11 +48,11 @@ router.post("/chat", async (req, res) => {
 
     const user = await prisma.user.findUnique({
       where: { id: req.userId },
-      select: { name: true, age: true, height: true, bodyWeight: true },
+      select: { name: true, age: true, height: true, bodyWeight: true, activityLevel: true, gender: true, chest: true, waist: true, hips: true, biceps: true, thigh: true },
     });
     if (!user) { res.status(404).json({ message: "Пользователь не найден" }); return; }
 
-    const nutrition = calculateNutrition(user.age ?? null, user.height ?? null, user.bodyWeight ?? null);
+    const nutrition = calculateNutrition(user.age ?? null, user.height ?? null, user.bodyWeight ?? null, user.activityLevel ?? null, user.gender ?? null);
 
     const systemPrompt = `Ты — Берегиня, мудрый ИИ-нутрициолог приложения «Силушка Богатырская».
 Говоришь по-русски, дружелюбно и тепло, иногда с лёгким богатырским колоритом.
@@ -43,6 +63,13 @@ router.post("/chat", async (req, res) => {
 - Возраст: ${user.age ? user.age + " лет" : "не указан"}
 - Рост: ${user.height ? user.height + " см" : "не указан"}
 - Вес: ${user.bodyWeight ? user.bodyWeight + " кг" : "не указан"}
+- Пол: ${user.gender === "male" ? "мужчина" : "женщина"}
+- Уровень активности: ${ACTIVITY_LABELS[user.activityLevel ?? "moderate"] ?? "умеренная активность"}
+- Обхват груди: ${user.chest ? user.chest + " см" : "не указан"}
+- Обхват талии: ${user.waist ? user.waist + " см" : "не указан"}
+- Обхват бёдер: ${user.hips ? user.hips + " см" : "не указан"}
+- Обхват бицепса: ${user.biceps ? user.biceps + " см" : "не указан"}
+- Обхват бедра: ${user.thigh ? user.thigh + " см" : "не указан"}
 ${nutrition
   ? `\nРассчитанная суточная норма (умеренная активность):\n- Калории: ${nutrition.tdee} ккал\n- Белки: ${nutrition.protein} г\n- Жиры: ${nutrition.fat} г\n- Углеводы: ${nutrition.carbs} г`
   : "\n⚠️ Параметры пользователя не заполнены. В начале разговора спроси об уровне активности (сидячий/умеренный/активный) и рассчитай норму сама."
