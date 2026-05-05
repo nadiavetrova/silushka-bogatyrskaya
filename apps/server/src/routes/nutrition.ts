@@ -85,6 +85,10 @@ ${nutrition
     if (!groqRes.ok) {
       const err = await groqRes.json().catch(() => ({}));
       console.error("Groq error:", JSON.stringify(err));
+      if (groqRes.status === 429) {
+        res.status(500).json({ message: "Слишком много запросов, подожди минуту и попробуй снова" });
+        return;
+      }
       const errMsg = err?.error?.message || `HTTP ${groqRes.status}`;
       res.status(500).json({ message: `Groq: ${errMsg}` });
       return;

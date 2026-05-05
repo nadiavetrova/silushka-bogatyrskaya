@@ -66,6 +66,11 @@ export default function NutritionPage() {
   const chatEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
+  const clearChat = () => {
+    setMessages([{ role: "ai", text: WELCOME, id: "welcome" }]);
+    setSavedMsgIds(new Set());
+  };
+
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
@@ -173,6 +178,15 @@ export default function NutritionPage() {
       {/* ===== CHAT TAB ===== */}
       {tab === "chat" && (
         <div className="flex flex-col flex-1">
+          {/* Clear chat button */}
+          {messages.length > 1 && (
+            <button
+              onClick={clearChat}
+              className="self-end mb-3 px-3 py-1.5 text-[10px] text-[#9b7a4a] border border-[#3a3530]/40 rounded-lg hover:text-[#a83232] hover:border-[#a83232]/30 transition-all"
+            >
+              🗑 Очистить историю
+            </button>
+          )}
           {/* Messages */}
           <div className="flex flex-col gap-4 mb-4">
             {messages.map((msg) => (
