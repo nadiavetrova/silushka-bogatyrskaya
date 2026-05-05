@@ -157,8 +157,8 @@ export default function NutritionPage() {
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="flex gap-1 mb-4 bg-[#1a1208]/60 rounded-xl p-1 border border-[#3a3530]/40">
+      {/* Tabs — sticky при скролле */}
+      <div className="flex gap-1 mb-4 bg-[#1a1208]/90 rounded-xl p-1 border border-[#3a3530]/40 sticky top-14 z-10 backdrop-blur-sm">
         <button
           onClick={() => setTab("chat")}
           className={`flex-1 py-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${tab === "chat" ? "bg-[#3b0a0a] text-[#e8dcc8]" : "text-[#9b7a4a] hover:text-[#d4bc8e]"}`}
